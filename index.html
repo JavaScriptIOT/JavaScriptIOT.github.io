@@ -19,10 +19,6 @@
     <script>
     var vConsole = new VConsole();
     
-    const aa = new Date("2022-07-03 07:00:00")
-     const hour = aa.getHours();
-    console.log(hour)
-    
     window.addEventListener('load', function () {
     alert("It's loaded!")
     })
@@ -91,7 +87,7 @@
             if (powerpack_state.pack_current_power + charge_power * 0.25 * powerpack.charge_efficiency > powerpack.pack_number * powerpack.pack_max_capacity)
                 charge_power = (powerpack.pack_number * powerpack.pack_max_capacity - powerpack_state.pack_current_power)/powerpack.charge_efficiency*4;
             dellta = charge_power * 0.25 
-            console.log("over" + (powerpack.transform_capacity - charge_power - user_power))
+            //console.log("over" + (powerpack.transform_capacity - charge_power - user_power))
             powerpack_state.pack_current_power += dellta * powerpack.charge_efficiency//* powerpack.charge_efficiency; //for 0.25 hour
             powerpack_state.pack_momey_gain -= dellta * powerprice.valley_time.price;
             powerpack.Totalpower = charge_power + user_power;
@@ -106,7 +102,7 @@
             if (powerpack_state.pack_current_power - discharge_power * 0.25 / powerpack.dicharge_efficiency< 0)
                 discharge_power = powerpack_state.pack_current_power * powerpack.dicharge_efficiency*4
             dellta = discharge_power * 0.25
-            console.log(dellta)
+            //console.log(dellta)
             powerpack_state.pack_current_power -= dellta/powerpack.dicharge_efficiency //for 0.25 hour;
             powerpack_state.pack_momey_gain += dellta * powerprice.peak_time.price;
             powerpack.Totalpower = user_power - discharge_power;
@@ -117,8 +113,8 @@
 
               df = df.dropNa({ axis: 1 })
 
-              df = df.head(10000)
-              df = df.tail(3000)
+              //df = df.head(10000)
+              //df = df.tail(3000)
               
               df.sortValues("日期", { ascending: true, inplace: true })
 
@@ -142,14 +138,14 @@
                     else if (  hour >= powerprice.peak_time.time[1].start_hour && hour < powerprice.peak_time.time[1].end_hour  )
                       discharge(power)
                   
-                    console.log(col[0])
-                    console.log(hour)
-                   console.log(powerpack_state.pack_current_power)
-                  console.log(powerpack_state.pack_momey_gain)
-                console.log(powerpack.Totalpower)
+                   // console.log(col[0])
+                   // console.log(hour)
+                  // console.log(powerpack_state.pack_current_power)
+                  // console.log(powerpack_state.pack_momey_gain)
+                  // console.log(powerpack.Totalpower)
                   return [col[0], col[1], powerpack_state.pack_current_power, powerpack_state.pack_momey_gain,powerpack.Totalpower]
               }
-              console.log(powerdata)
+              //console.log(powerdata)
               powerdata = powerdata.apply(work, { axis: 1 })
               powerdata.plot("div1").table() //display csv as table
               new_df = powerdata.setIndex({ column: "日期", drop: true }); //resets the index to Date column
