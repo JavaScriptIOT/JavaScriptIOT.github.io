@@ -1,167 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/danfojs@1.1.2/lib/bundle.js"></script>
     <script src="https://cdn.bootcss.com/vConsole/3.2.0/vconsole.min.js"></script>
     <title>Document</title>
-  </head>
+</head>
 
-  <body>
+<body>
     <a>Pack number</a><input type="text" id="number" value="7">
     <input type="file" id="file" name="file">
     <div id="div1"></div>
     <div id="div2"></div>
     <div id="div3"></div>
     <div id="div4"></div>
-    <button id="download" >下载</button>
+    <button id="download">下载</button>
     <script>
-    var vConsole = new VConsole();
-    
-    window.addEventListener('load', function () {
-    alert("It's loaded!")
-    })
+        var vConsole = new VConsole();
 
-    const inputFile = document.querySelector('#file')
-    const downloadFile = document.querySelector('#download')
-    var downloadCSV = null;
+        window.addEventListener('load', function () {
+            alert("It's loaded!")
+        })
 
-    downloadFile.addEventListener("click", async () => {
-        if (downloadCSV!=null)
-            dfd.toCSV(downloadCSV, { fileName: "charge.csv", download: true});
-    })
+        const inputFile = document.querySelector('#file')
+        const downloadFile = document.querySelector('#download')
+        var downloadCSV = null;
 
-    inputFile.addEventListener("change", async () => {
-           const excelFile = inputFile.files[0]
+        downloadFile.addEventListener("click", async () => {
+            if (downloadCSV != null)
+                dfd.toCSV(downloadCSV, { fileName: "charge.csv", download: true });
+        })
+
+        inputFile.addEventListener("change", async () => {
+            const excelFile = inputFile.files[0]
             //const excelFile = "http://localhost:8080/power.xls"
-           var inputValue = document.getElementById("number").value;
-           var pack_number = parseInt(inputValue)
-           const powerpack = {
-            pack_max_capacity : 215,
-            pack_max_power : 100,
-            pack_number : pack_number,
-            transform_capacity : 2600 *0.95,
-            charge_efficiency:0.93,
-            dicharge_efficiency: 0.93,
-            Totalpower:0
-           }
+            var inputValue = document.getElementById("number").value;
+            var pack_number = parseInt(inputValue)
+            const powerpack = {
+                pack_max_capacity: 215,
+                pack_max_power: 100,
+                pack_number: pack_number,
+                transform_capacity: 2600 * 0.95,
+                charge_efficiency: 0.93,
+                dicharge_efficiency: 0.93,
+                Totalpower: 0
+            }
 
-        var powerpack_state = {
-        pack_current_power: 0,
-        pack_momey_gain: 0
-      }
+            var powerpack_state = {
+                pack_current_power: 0,
+                pack_momey_gain: 0
+            }
 
-      const pack_charge_rate_night = 0.33
+            const pack_charge_rate_night = 0.33
 
-      const powerprice = {
-        peak_time : { 
-            time: [{
-            start_hour : 9,
-            end_hour : 11
-        }, {
-            start_hour : 15,
-            end_hour : 17
-                  },], price: 1.009899971
+            const powerprice = {
+                peak_time: {
+                    time: [{
+                        start_hour: 9,
+                        end_hour: 11
+                    }, {
+                        start_hour: 15,
+                        end_hour: 17
+                    },], price: 1.009899971
 
-        },
-        valley_time: { 
-            time: [{
-            start_hour : 0,
-            end_hour : 8
-        }, {
-            start_hour : 11,
-            end_hour : 13
-                },], price: 0.118399996
+                },
+                valley_time: {
+                    time: [{
+                        start_hour: 0,
+                        end_hour: 8
+                    }, {
+                        start_hour: 11,
+                        end_hour: 13
+                    },], price: 0.118399996
 
-        }
+                }
 
-      }
+            }
 
-        function charge(user_power, rate) {
-            if (user_power < 0) user_power = 0;
-            total = powerpack.pack_max_power * powerpack.pack_number
-            charge_power = total * rate
-            if (charge_power > powerpack.transform_capacity - user_power)
-                charge_power = powerpack.transform_capacity - user_power
-            if (powerpack_state.pack_current_power + charge_power * 0.25 * powerpack.charge_efficiency > powerpack.pack_number * powerpack.pack_max_capacity)
-                charge_power = (powerpack.pack_number * powerpack.pack_max_capacity - powerpack_state.pack_current_power)/powerpack.charge_efficiency*4;
-            dellta = charge_power * 0.25 
-            //console.log("over" + (powerpack.transform_capacity - charge_power - user_power))
-            powerpack_state.pack_current_power += dellta * powerpack.charge_efficiency//* powerpack.charge_efficiency; //for 0.25 hour
-            powerpack_state.pack_momey_gain -= dellta * powerprice.valley_time.price;
-            powerpack.Totalpower = charge_power + user_power;
-        }
+            function charge(user_power, rate) {
+                if (user_power < 0) user_power = 0;
+                total = powerpack.pack_max_power * powerpack.pack_number
+                charge_power = total * rate
+                if (charge_power > powerpack.transform_capacity - user_power)
+                    charge_power = powerpack.transform_capacity - user_power
+                if (powerpack_state.pack_current_power + charge_power * 0.25 * powerpack.charge_efficiency > powerpack.pack_number * powerpack.pack_max_capacity)
+                    charge_power = (powerpack.pack_number * powerpack.pack_max_capacity - powerpack_state.pack_current_power) / powerpack.charge_efficiency * 4;
+                dellta = charge_power * 0.25
+                //console.log("over" + (powerpack.transform_capacity - charge_power - user_power))
+                powerpack_state.pack_current_power += dellta * powerpack.charge_efficiency//* powerpack.charge_efficiency; //for 0.25 hour
+                powerpack_state.pack_momey_gain -= dellta * powerprice.valley_time.price;
+                powerpack.Totalpower = charge_power + user_power;
+            }
 
-        function discharge(user_power) {
-            if (user_power < 0) user_power = 0;
-            total = powerpack.pack_max_power * powerpack.pack_number
-            discharge_power = total
-            if (discharge_power > user_power)
-                discharge_power = user_power
-            if (powerpack_state.pack_current_power - discharge_power * 0.25 / powerpack.dicharge_efficiency< 0)
-                discharge_power = powerpack_state.pack_current_power * powerpack.dicharge_efficiency*4
-            dellta = discharge_power * 0.25
-            //console.log(dellta)
-            powerpack_state.pack_current_power -= dellta/powerpack.dicharge_efficiency //for 0.25 hour;
-            powerpack_state.pack_momey_gain += dellta * powerprice.peak_time.price;
-            powerpack.Totalpower = user_power - discharge_power;
-        }
+            function discharge(user_power) {
+                if (user_power < 0) user_power = 0;
+                total = powerpack.pack_max_power * powerpack.pack_number
+                discharge_power = total
+                if (discharge_power > user_power)
+                    discharge_power = user_power
+                if (powerpack_state.pack_current_power - discharge_power * 0.25 / powerpack.dicharge_efficiency < 0)
+                    discharge_power = powerpack_state.pack_current_power * powerpack.dicharge_efficiency * 4
+                dellta = discharge_power * 0.25
+                //console.log(dellta)
+                powerpack_state.pack_current_power -= dellta / powerpack.dicharge_efficiency //for 0.25 hour;
+                powerpack_state.pack_momey_gain += dellta * powerprice.peak_time.price;
+                powerpack.Totalpower = user_power - discharge_power;
+            }
 
+            function work(df) {
+                df = df.dropNa({ axis: 1 })
 
-        dfd.readExcel(excelFile).then((df) => {
+                //df = df.head(10000)
+                //df = df.tail(3000)
 
-              df = df.dropNa({ axis: 1 })
+                df.sortValues("日期", { ascending: true, inplace: true })
 
-              //df = df.head(10000)
-              //df = df.tail(3000)
-              
-              df.sortValues("日期", { ascending: true, inplace: true })
+                var powerdata = df.loc({ columns: ["日期", "瞬时有功"] })
+                var d = new Array(powerdata.index.length).fill(0.1)
+                powerdata.addColumn("储能", d, { inplace: true })
+                powerdata.addColumn("收入", d, { inplace: true })
+                powerdata.addColumn("总功率", d, { inplace: true })
 
-              var powerdata = df.loc({columns: ["日期","瞬时有功"]})
-              var d = new Array(powerdata.index.length).fill(0.1)
-              powerdata.addColumn("储能", d, { inplace: true })
-            powerdata.addColumn("收入", d, { inplace: true })
-           powerdata.addColumn("总功率", d, { inplace: true })
-
-              function work(col) {
-                    const date = new Date(col[0].replace('\t',''))
+                function work(col) {
+                    const date = new Date(col[0].replace('\t', ''))
                     const hour = date.getHours();
                     const power = col[1];
-                    if( hour >= powerprice.valley_time.time[0].start_hour && hour < powerprice.valley_time.time[0].end_hour)
+                    if (hour >= powerprice.valley_time.time[0].start_hour && hour < powerprice.valley_time.time[0].end_hour)
                         charge(power, pack_charge_rate_night)
-       
-                    else if (hour >= powerprice.valley_time.time[1].start_hour && hour < powerprice.valley_time.time[1].end_hour) 
-                        charge(power, 1)   
-                    else if (  hour >= powerprice.peak_time.time[0].start_hour && hour < powerprice.peak_time.time[0].end_hour  )
+
+                    else if (hour >= powerprice.valley_time.time[1].start_hour && hour < powerprice.valley_time.time[1].end_hour)
+                        charge(power, 1)
+                    else if (hour >= powerprice.peak_time.time[0].start_hour && hour < powerprice.peak_time.time[0].end_hour)
                         discharge(power)
-                    else if (  hour >= powerprice.peak_time.time[1].start_hour && hour < powerprice.peak_time.time[1].end_hour  )
-                      discharge(power)
-                  
-                   // console.log(col[0])
-                   // console.log(hour)
-                  // console.log(powerpack_state.pack_current_power)
-                  // console.log(powerpack_state.pack_momey_gain)
-                  // console.log(powerpack.Totalpower)
-                  return [col[0], col[1], powerpack_state.pack_current_power, powerpack_state.pack_momey_gain,powerpack.Totalpower]
-              }
-              //console.log(powerdata)
-              powerdata = powerdata.apply(work, { axis: 1 })
-              powerdata.plot("div1").table() //display csv as table
-              new_df = powerdata.setIndex({ column: "日期", drop: true }); //resets the index to Date column
-              console.log(new_df)
-              // new_df.head().print()
-              new_df.plot("div2").line({
-                  config: {
-                      columns: ["瞬时有功", "储能", "收入","总功率"]
-                  }
-              })  //makes a timeseries plot
-              //document.getElementById('div4').appendChild(powerpack_state.pack_momey_gain);
-          }).catch(err => {
-              console.log(err);
-          })
-    })
+                    else if (hour >= powerprice.peak_time.time[1].start_hour && hour < powerprice.peak_time.time[1].end_hour)
+                        discharge(power)
+
+                    // console.log(col[0])
+                    // console.log(hour)
+                    // console.log(powerpack_state.pack_current_power)
+                    // console.log(powerpack_state.pack_momey_gain)
+                    // console.log(powerpack.Totalpower)
+                    return [col[0], col[1], powerpack_state.pack_current_power, powerpack_state.pack_momey_gain, powerpack.Totalpower]
+                }
+                //console.log(powerdata)
+                powerdata = powerdata.apply(work, { axis: 1 })
+                powerdata.plot("div1").table() //display csv as table
+                new_df = powerdata.setIndex({ column: "日期", drop: true }); //resets the index to Date column
+                console.log(new_df)
+                // new_df.head().print()
+                new_df.plot("div2").line({
+                    config: {
+                        columns: ["瞬时有功", "储能", "收入", "总功率"]
+                    }
+                })  //makes a timeseries plot
+                //document.getElementById('div4').appendChild(powerpack_state.pack_momey_gain);
+            }
+
+            dfd.readExcel(excelFile).then((df) => {
+                work(df) 
+            }).catch(err => {
+                console.log(err);
+            })
+        })
 
     </script>
-  </body>
+</body>
+
 </html>
