@@ -10,7 +10,8 @@
 </head>
 
 <body>
-    <a>Pack number</a><input type="text" id="number" value="7">
+    <a>Transform Capacity</a><input type="text" id="transformCapacity" value="2600">
+    <a>Pack number</a><input type="text" id="packNumber" value="7">
     <input type="file" id="file" name="file">
     <div id="div1"></div>
     <div id="div2"></div>
@@ -34,15 +35,19 @@
         })
 
         inputFile.addEventListener("change", async () => {
-            const excelFile = inputFile.files[0]
-            //const excelFile = "http://localhost:8080/power.xls"
-            var inputValue = document.getElementById("number").value;
+            if(inputFile == null) return
+            const file = inputFile.files[0]
+            const fileName = file.name
+            const extension = fileName.substring(fileName.lastIndexOf('.') + 1);
+            var inputValue = document.getElementById("packNumber").value;
             var pack_number = parseInt(inputValue)
+            inputValue = document.getElementById("transformCapacity").value;
+            var transform_capacity = parseInt(inputValue)
             const powerpack = {
                 pack_max_capacity: 215,
                 pack_max_power: 100,
                 pack_number: pack_number,
-                transform_capacity: 2600 * 0.95,
+                transform_capacity: transform_capacity * 0.95,
                 charge_efficiency: 0.93,
                 dicharge_efficiency: 0.93,
                 Totalpower: 0
@@ -112,8 +117,8 @@
             function work(df) {
                 df = df.dropNa({ axis: 1 })
 
-                //df = df.head(10000)
-                //df = df.tail(3000)
+//                df = df.head(10000)
+//                df = df.tail(3000)
 
                 df.sortValues("日期", { ascending: true, inplace: true })
 
@@ -122,6 +127,21 @@
                 powerdata.addColumn("储能", d, { inplace: true })
                 powerdata.addColumn("收入", d, { inplace: true })
                 powerdata.addColumn("总功率", d, { inplace: true })
+                // powerdata.addColumn("month", powerdata["日期"].apply( (x) => {
+                //     const date = new Date(x.replace('\t', ''))
+                //     const month = date.getMonth() + 1;
+                //     return month
+                // }));
+                // powerdata.addColumn("hour", powerdata["日期"].apply( (x) => {
+                //     const date = new Date(x.replace('\t', ''))
+                //     const month = date.getHours();
+                //     return month
+                // }));
+                // powerdata.addColumn("day", powerdata["日期"].apply( (x) => {
+                //     const date = new Date(x.replace('\t', ''))
+                //     const month = date.getDay;
+                //     return month
+                // }));
 
                 function work(col) {
                     const date = new Date(col[0].replace('\t', ''))
@@ -155,14 +175,38 @@
                         columns: ["瞬时有功", "储能", "收入", "总功率"]
                     }
                 })  //makes a timeseries plot
+
+                let group_df = powerdata.addColumn("month", powerdata["日期"].apply( (x) => {
+                    const date = new Date(x.replace('\t', ''))
+                    const month = date.getMonth() + 1;
+                    return month
+                }));
+                group_df.drop({ columns: ["日期"], inplace: true })
+                new_df_2 = group_df.groupby(["month"]).max()
+                new_df_2.plot("div3").table() 
+                max_power_all =  group_df.groupby(["month"]).max()['总功率_max']
+                max_power_current =  group_df.groupby(["month"]).max()['瞬时有功_max']
+                console.log(max_power_current.sum() * 40)
+                console.log(max_power_all.sum() * 40)
+                console.log((max_power_all.sum() - max_power_current.sum()) * 40) 
+                console.log(transform_capacity * 30)
                 //document.getElementById('div4').appendChild(powerpack_state.pack_momey_gain);
             }
-
-            dfd.readExcel(excelFile).then((df) => {
-                work(df) 
-            }).catch(err => {
-                console.log(err);
-            })
+            if(extension == "xls") {
+                dfd.readExcel(file).then((df) => {
+                    work(df) 
+                }).catch(err => {
+                    console.log(err);
+                })}
+            else if (extension == "csv") {
+                dfd.readCSV(file).then((df) => {
+                    work(df) 
+                }).catch(err => {
+                    console.log(err);
+                })}
+            // } else {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+            //     alert("File is not support.")
+            // } 
         })
 
     </script>
