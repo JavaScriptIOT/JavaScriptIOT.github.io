@@ -186,10 +186,10 @@
                 new_df_2.plot("div3").table() 
                 max_power_all =  group_df.groupby(["month"]).max()['总功率_max']
                 max_power_current =  group_df.groupby(["month"]).max()['瞬时有功_max']
-                console.log(max_power_current.sum() * 40)
-                console.log(max_power_all.sum() * 40)
-                console.log((max_power_all.sum() - max_power_current.sum()) * 40) 
-                console.log(transform_capacity * 30)
+                console.log( "原始容量费用" + max_power_current.sum() * 40)
+                console.log("储能容量费用"  + max_power_all.sum() * 40)
+                console.log("容量费用差"+  (max_power_all.sum() - max_power_current.sum()) * 40) 
+                console.log( "固定容量费用" +  transform_capacity * 30   * new_df_2.size )
                 //document.getElementById('div4').appendChild(powerpack_state.pack_momey_gain);
             }
             if(extension == "xls") {
