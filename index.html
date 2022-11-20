@@ -13,6 +13,7 @@
     <a>Transform Capacity</a><input type="text" id="transformCapacity" value="2600">
     <a>Pack number</a><input type="text" id="packNumber" value="7">
     <input type="file" id="file" name="file">
+    <button id="simulate">计算</button>
     <div id="div1"></div>
     <div id="div2"></div>
     <div id="div3"></div>
@@ -27,6 +28,7 @@
 
         const inputFile = document.querySelector('#file')
         const downloadFile = document.querySelector('#download')
+        const simulation  = document.querySelector('#simulate')
         var downloadCSV = null;
 
         downloadFile.addEventListener("click", async () => {
@@ -34,7 +36,7 @@
                 dfd.toCSV(downloadCSV, { fileName: "charge.csv", download: true });
         })
 
-        inputFile.addEventListener("change", async () => {
+        simulation.addEventListener("click", async () => {
             if(inputFile == null) return
             const file = inputFile.files[0]
             const fileName = file.name
@@ -58,7 +60,7 @@
                 pack_momey_gain: 0
             }
 
-            const pack_charge_rate_night = 0.33
+            const pack_charge_rate_night = 0.5//0.33
 
             const powerprice = {
                 peak_time: {
@@ -69,7 +71,6 @@
                         start_hour: 15,
                         end_hour: 17
                     },], price: 1.009899971
-
                 },
                 valley_time: {
                     time: [{
@@ -184,12 +185,21 @@
                 group_df.drop({ columns: ["日期"], inplace: true })
                 new_df_2 = group_df.groupby(["month"]).max()
                 new_df_2.plot("div3").table() 
-                max_power_all =  group_df.groupby(["month"]).max()['总功率_max']
-                max_power_current =  group_df.groupby(["month"]).max()['瞬时有功_max']
-                console.log( "原始容量费用" + max_power_current.sum() * 40)
-                console.log("储能容量费用"  + max_power_all.sum() * 40)
-                console.log("容量费用差"+  (max_power_all.sum() - max_power_current.sum()) * 40) 
-                console.log( "固定容量费用" +  transform_capacity * 30   * new_df_2.size )
+                max_power_all_momey =  new_df_2['总功率_max'].sum()* 40
+                max_power_current_momey =  new_df_2['瞬时有功_max'].sum() * 40
+                total_money_gain = new_df_2["收入_max"].max()
+                transform_capacity_momey =  transform_capacity * 30   * new_df_2.index.length
+                total_cost =  pack_number  * 400000 
+                console.log("储能总利润" + total_money_gain )
+                console.log( "储能容量费用" + max_power_all_momey)
+                console.log("原始容量费用"  + max_power_current_momey)
+                console.log( "固定容量费用" +  transform_capacity_momey )
+                //console.log("可变容量总收益"+  (total_money_gain -  max_power_all_momey + max_power_current_momey)) 
+               // console.log("可变容量费用差"+  (total_money_gain + max_power_current_momey - transform_capacity_momey)) 
+                console.log("设备成本"+ total_cost ) 
+                console.log("固定容量投资回报率"+ total_cost /  ((total_money_gain + max_power_current_momey - transform_capacity_momey) /11 * 12) )
+                console.log("可变容量投资回报率"+ total_cost /  ((total_money_gain - max_power_all_momey + max_power_current_momey)/11 * 12)) 
+                downloadCSV = powerdata
                 //document.getElementById('div4').appendChild(powerpack_state.pack_momey_gain);
             }
             if(extension == "xls") {
