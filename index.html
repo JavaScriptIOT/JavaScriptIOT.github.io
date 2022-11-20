@@ -50,8 +50,8 @@
                 pack_max_power: 100,
                 pack_number: pack_number,
                 transform_capacity: transform_capacity * 0.95,
-                charge_efficiency: 0.93,
-                dicharge_efficiency: 0.93,
+                charge_efficiency: 0.94,
+                dicharge_efficiency: 0.94,
                 Totalpower: 0
             }
 
@@ -60,7 +60,7 @@
                 pack_momey_gain: 0
             }
 
-            const pack_charge_rate_night = 0.5//0.33
+            const pack_charge_rate_night = 0.33
 
             const powerprice = {
                 peak_time: {
@@ -128,21 +128,6 @@
                 powerdata.addColumn("储能", d, { inplace: true })
                 powerdata.addColumn("收入", d, { inplace: true })
                 powerdata.addColumn("总功率", d, { inplace: true })
-                // powerdata.addColumn("month", powerdata["日期"].apply( (x) => {
-                //     const date = new Date(x.replace('\t', ''))
-                //     const month = date.getMonth() + 1;
-                //     return month
-                // }));
-                // powerdata.addColumn("hour", powerdata["日期"].apply( (x) => {
-                //     const date = new Date(x.replace('\t', ''))
-                //     const month = date.getHours();
-                //     return month
-                // }));
-                // powerdata.addColumn("day", powerdata["日期"].apply( (x) => {
-                //     const date = new Date(x.replace('\t', ''))
-                //     const month = date.getDay;
-                //     return month
-                // }));
 
                 function work(col) {
                     const date = new Date(col[0].replace('\t', ''))
@@ -167,7 +152,23 @@
                 }
                 //console.log(powerdata)
                 powerdata = powerdata.apply(work, { axis: 1 })
+                powerdata = powerdata.addColumn("month", powerdata["日期"].apply( (x) => {
+                    const date = new Date(x.replace('\t', ''))
+                    const month = date.getMonth() + 1;
+                    return month
+                }));
+                powerdata = powerdata.addColumn("date", powerdata["日期"].apply( (x) => {
+                    const date = new Date(x.replace('\t', ''))
+                    const day = date.getDate();
+                    return day
+                }));
+                powerdata = powerdata.addColumn("weekday", powerdata["日期"].apply( (x) => {
+                    const date = new Date(x.replace('\t', ''))
+                    const day = date.getDay();
+                    return day
+                }));
                 powerdata.plot("div1").table() //display csv as table
+                downloadCSV = powerdata
                 new_df = powerdata.setIndex({ column: "日期", drop: true }); //resets the index to Date column
                 console.log(new_df)
                 // new_df.head().print()
@@ -177,12 +178,8 @@
                     }
                 })  //makes a timeseries plot
 
-                let group_df = powerdata.addColumn("month", powerdata["日期"].apply( (x) => {
-                    const date = new Date(x.replace('\t', ''))
-                    const month = date.getMonth() + 1;
-                    return month
-                }));
-                group_df.drop({ columns: ["日期"], inplace: true })
+                let group_df = powerdata
+                group_df.drop({ columns: ["日期", "date","weekday"], inplace: true })
                 new_df_2 = group_df.groupby(["month"]).max()
                 new_df_2.plot("div3").table() 
                 max_power_all_momey =  new_df_2['总功率_max'].sum()* 40
@@ -199,7 +196,7 @@
                 console.log("设备成本"+ total_cost ) 
                 console.log("固定容量投资回报率"+ total_cost /  ((total_money_gain + max_power_current_momey - transform_capacity_momey) /11 * 12) )
                 console.log("可变容量投资回报率"+ total_cost /  ((total_money_gain - max_power_all_momey + max_power_current_momey)/11 * 12)) 
-                downloadCSV = powerdata
+
                 //document.getElementById('div4').appendChild(powerpack_state.pack_momey_gain);
             }
             if(extension == "xls") {
