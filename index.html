@@ -10,8 +10,8 @@
 </head>
 
 <body>
-    <a>Transform Capacity</a><input type="text" id="transformCapacity" value="2600">
-    <a>Pack number</a><input type="text" id="packNumber" value="7">
+    <a>Transform Capacity</a><input type="text" id="transformCapacity" value="4450">
+    <a>Pack number</a><input type="text" id="packNumber" value="15">
     <input type="file" id="file" name="file">
     <button id="simulate">计算</button>
     <div id="div1"></div>
@@ -152,7 +152,7 @@
                         charge(power, pack_charge_rate_night)
 
                     else if (hour >= powerprice.valley_time.time[1].start_hour && hour < powerprice.valley_time.time[1].end_hour)
-                        charge(power, 1)
+                        charge(power, 0.9)
                     else if (hour >= powerprice.peak_time.time[0].start_hour && hour < powerprice.peak_time.time[0].end_hour)
                         discharge(power)
                     else if (hour >= powerprice.peak_time.time[1].start_hour && hour < powerprice.peak_time.time[1].end_hour)
