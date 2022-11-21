@@ -115,6 +115,10 @@
                 powerpack.Totalpower = user_power - discharge_power;
             }
 
+            function keep(user_power) {
+                powerpack.Totalpower = user_power ;
+            }
+
             function work(df) {
                 df = df.dropNa({ axis: 1 })
 
@@ -135,14 +139,14 @@
                     const power = col[1];
                     if (hour >= powerprice.valley_time.time[0].start_hour && hour < powerprice.valley_time.time[0].end_hour)
                         charge(power, pack_charge_rate_night)
-
                     else if (hour >= powerprice.valley_time.time[1].start_hour && hour < powerprice.valley_time.time[1].end_hour)
                         charge(power, 0.9)
                     else if (hour >= powerprice.peak_time.time[0].start_hour && hour < powerprice.peak_time.time[0].end_hour)
                         discharge(power)
                     else if (hour >= powerprice.peak_time.time[1].start_hour && hour < powerprice.peak_time.time[1].end_hour)
                         discharge(power)
-
+                    else 
+                        keep(power)
                     // console.log(col[0])
                     // console.log(hour)
                     // console.log(powerpack_state.pack_current_power)
