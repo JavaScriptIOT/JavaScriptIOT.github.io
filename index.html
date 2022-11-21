@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/danfojs@1.1.2/lib/bundle.js"></script>
     <script src="https://cdn.bootcss.com/vConsole/3.2.0/vconsole.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jschardet/3.0.0/jschardet.min.js"></script>
+    
     <title>Document</title>
 </head>
 
@@ -120,18 +122,22 @@
             }
 
             function work(df) {
-                df = df.dropNa({ axis: 1 })
-
 //                df = df.head(10000)
 //                df = df.tail(3000)
-
+                // if (df["日期"] == undefined) {
+                //     json = '{ "'+  df.columns[4] + '" : "日期", "'+ df.columns[6] + '":"瞬时有功" }'
+                //     obj = JSON.parse(json);
+                //     df = df.rename(obj)
+                // }
                 df.sortValues("日期", { ascending: true, inplace: true })
+                //df.sortValues(df.columns[4], { ascending: true, inplace: true })
 
-                var powerdata = df.loc({ columns: ["日期", "瞬时有功"] })
+                var powerdata = df.loc({ columns: ['日期', '瞬时有功'] })
+                powerdata = powerdata.dropNa({ axis: 1 })
                 var d = new Array(powerdata.index.length).fill(0.1)
-                powerdata.addColumn("储能", d, { inplace: true })
-                powerdata.addColumn("收入", d, { inplace: true })
-                powerdata.addColumn("总功率", d, { inplace: true })
+                powerdata.addColumn('储能', d, { inplace: true })
+                powerdata.addColumn('收入', d, { inplace: true })
+                powerdata.addColumn('总功率', d, { inplace: true })
 
                 function work(col) {
                     const date = new Date(col[0].replace('\t', ''))
@@ -156,24 +162,24 @@
                 }
                 //console.log(powerdata)
                 powerdata = powerdata.apply(work, { axis: 1 })
-                powerdata = powerdata.addColumn("month", powerdata["日期"].apply( (x) => {
+                powerdata = powerdata.addColumn('month', powerdata['日期'].apply( (x) => {
                     const date = new Date(x.replace('\t', ''))
                     const month = date.getMonth() + 1;
                     return month
                 }));
-                powerdata = powerdata.addColumn("date", powerdata["日期"].apply( (x) => {
+                powerdata = powerdata.addColumn('date', powerdata['日期'].apply( (x) => {
                     const date = new Date(x.replace('\t', ''))
                     const day = date.getDate();
                     return day
                 }));
-                powerdata = powerdata.addColumn("weekday", powerdata["日期"].apply( (x) => {
+                powerdata = powerdata.addColumn('weekday', powerdata['日期'].apply( (x) => {
                     const date = new Date(x.replace('\t', ''))
                     const day = date.getDay();
                     return day
                 }));
                 powerdata.plot("div1").table() //display csv as table
                 downloadCSV = powerdata
-                new_df = powerdata.setIndex({ column: "日期", drop: true }); //resets the index to Date column
+                new_df = powerdata.setIndex({ column: '日期', drop: true }); //resets the index to Date column
                 console.log(new_df)
                 // new_df.head().print()
                 new_df.plot("div2").line({
@@ -183,7 +189,7 @@
                 })  //makes a timeseries plot
 
                 let group_df = powerdata
-                group_df.drop({ columns: ["日期", "date","weekday"], inplace: true })
+                group_df = group_df.drop({ columns: ["日期", "date","weekday"], inplace: false })
                 new_df_2 = group_df.groupby(["month"]).max()
                 new_df_2.plot("div3").table() 
                 max_power_all_momey =  new_df_2['总功率_max'].sum()* 40
@@ -208,16 +214,25 @@
                     work(df) 
                 }).catch(err => {
                     console.log(err);
-                })}
+                })
+            }
             else if (extension == "csv") {
-                dfd.readCSV(file).then((df) => {
-                    work(df) 
-                }).catch(err => {
-                    console.log(err);
-                })}
-            // } else {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
-            //     alert("File is not support.")
-            // } 
+                const reader = new FileReader();
+                reader.readAsDataURL(file)  // 获取txt文件的base64码
+                reader.onload = function (evt) {
+                    buffer = evt.target.result
+                    ret = jschardet.detect(atob(buffer.split(';base64,')[1]));
+                    console.log(ret)
+                    dfd.readCSV(file, {encoding:ret.encoding}).then((df) => {
+                        work(df) 
+                    }).catch(err => {
+                        console.log(err);
+                    })
+                };
+            }
+            else {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+                alert("File is not support.")
+            } 
         })
 
     </script>
