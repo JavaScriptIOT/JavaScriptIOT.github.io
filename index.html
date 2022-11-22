@@ -12,8 +12,9 @@
 </head>
 
 <body>
-    <a>Transform Capacity</a><input type="text" id="transformCapacity" value="4450">
-    <a>Pack number</a><input type="text" id="packNumber" value="15">
+    <h2>储能站投资回报计算</h2>
+    <div><a>变压器容量功率:</a><input type="text" id="transformCapacity" value="4450"><a>KW</a></div>
+    <div><a>储能站个数:</a><input type="text" id="packNumber" value="15"></div>
     <input type="file" id="file" name="file">
     <button id="simulate">计算</button>
     <div id="div1"></div>
@@ -21,6 +22,48 @@
     <div id="div3"></div>
     <div id="div4"></div>
     <button id="download">下载</button>
+
+
+<!-- 一键计算节能空间——填写 -->
+<div class="g_c3one">
+    <div class="g_c3onetan">
+        <h2 class="g_word2">空压机节能空间计算</h2>
+        <div class="g_c3onecen">
+            <div class="g_c3onenr clearfix">
+                <div class="g_c3onenr2 fl">工频空压机数量:</div>
+                <div class="g_c3onenr3 fl"><input type="text" id="type_a">台</div>
+                <div class="g_c3onenr4 fl"></div>
+            </div>
+            <div class="g_c3onenr clearfix">
+                <div class="g_c3onenr2 fl">工频总功率:</div>
+                <div class="g_c3onenr3 fl"><input type="text" id="type_b">KW</div>
+                <div class="g_c3onenr4 fl"></div>
+            </div>
+            <div class="g_c3onenr clearfix">
+                <div class="g_c3onenr2 fl">工频平均加载率:</div>
+                <div class="g_c3onenr3 fl"><input type="text" id="type_c">%</div>
+                <div class="g_c3onenr4 fl"></div>
+            </div>
+            <div class="g_c3onenr clearfix">
+                <div class="g_c3onenr2 fl">变频空压机数量:</div>
+                <div class="g_c3onenr3 fl"><input type="text" id="type_d">台</div>
+                <div class="g_c3onenr4 fl"></div>
+            </div>
+            <div class="g_c3onenr clearfix">
+                <div class="g_c3onenr2 fl">变频总功率:</div>
+                <div class="g_c3onenr3 fl"><input type="text" id="type_e">KW</div>
+                <div class="g_c3onenr4 fl"></div>
+            </div>
+            <div class="g_c3onenr clearfix">
+                <div class="g_c3onenr2 fl">变频平均负载率:</div>
+                <div class="g_c3onenr3 fl"><input type="text" id="type_f">%</div>
+                <div class="g_c3onenr4 fl"></div>
+            </div>
+        </div>
+        <button id="air">计算</button>
+    </div>
+</div>
+
     <script>
         var vConsole = new VConsole();
 
@@ -228,6 +271,64 @@
             else {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
                 alert("File is not support.")
             } 
+        })
+
+        function cal(a,b,c,d,e,f){
+            c = (parseInt(c)/100).toFixed(1);
+            console.log(c)
+            f = (parseInt(f)/100).toFixed(1);
+            var g = (1 - c).toFixed(1);
+            var h = d - f * d;
+                h=Math.round(h*100)/100;
+            console.log(g);
+            console.log(h);
+            console.log(( g * 0.45 * b + h * 0.1 * e / d ) / (parseInt(b)+parseInt(e)));
+            return (( g * 0.45 * b + h * 0.1 * e / d )/(parseInt(b)+parseInt(e))).toFixed(2);
+            // return ( g * 0.45 * b + h * 0.1 * e / d )/(b+e);
+        }
+        const air = document.querySelector('#air')
+        air.addEventListener("click", async () => {
+            var a = document.getElementById("type_a").value;
+            var b = document.getElementById("type_b").value;
+            var c = document.getElementById("type_c").value;
+            var d = document.getElementById("type_d").value;
+            var e = document.getElementById("type_e").value;
+            var f = document.getElementById("type_f").value;
+            if(!a){
+                alert('请输入工频空压机数量');
+                return;
+            }
+            if(!b){
+                alert('请输入工频总功率');
+                return;
+            }
+            if(!c){
+                alert('请输入工频平均加载率');
+                return;
+            }
+            if(c < 1 || c > 100){
+                alert('工频平均加载率应大于等于1%且小于等于100%');
+                return;
+            }
+            if(!d){
+                alert('请输入变频空压机数量');
+                return;
+            }
+            if(!e){
+                alert('请输入变频总功率');
+                return;
+            }
+            if(!f){
+                alert('请输入变频平均负载率');
+                return;
+            }
+            if(f < 1 || f > 100){
+                alert('变频平均负载率应大于等于1%且小于等于100%');
+                return;
+            }
+            var vals = cal(a,b,c,d,e,f);
+            alert('空压站节能空间' + (vals * 100).toFixed(2) + "%");
+
         })
 
     </script>
