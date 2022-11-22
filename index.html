@@ -124,13 +124,8 @@
             function work(df) {
 //                df = df.head(10000)
 //                df = df.tail(3000)
-                // if (df["日期"] == undefined) {
-                //     json = '{ "'+  df.columns[4] + '" : "日期", "'+ df.columns[6] + '":"瞬时有功" }'
-                //     obj = JSON.parse(json);
-                //     df = df.rename(obj)
-                // }
+
                 df.sortValues("日期", { ascending: true, inplace: true })
-                //df.sortValues(df.columns[4], { ascending: true, inplace: true })
 
                 var powerdata = df.loc({ columns: ['日期', '瞬时有功'] })
                 powerdata = powerdata.dropNa({ axis: 1 })
