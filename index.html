@@ -17,11 +17,11 @@
     <div><a>储能站个数:</a><input type="text" id="packNumber" value="15"></div>
     <input type="file" id="file" name="file">
     <button id="simulate">计算</button>
-    <div id="div1"></div>
-    <div id="div2"></div>
-    <div id="div3"></div>
-    <div id="div4"></div>
-    <button id="download">下载</button>
+    <div id="div1"></div><button id="download1">下载</button>
+    <div id="div2"></div><button id="download2">下载</button>
+    <div id="div3"></div><button id="download3">下载</button>
+    <div id="div4"></div><button id="download4">下载</button>
+
 
 
 <!-- 一键计算节能空间——填写 -->
@@ -68,18 +68,34 @@
         var vConsole = new VConsole();
 
         window.addEventListener('load', function () {
-            alert("It's loaded!")
+            alert("程序加载完成")
         })
 
         const inputFile = document.querySelector('#file')
-        const downloadFile = document.querySelector('#download')
         const simulation  = document.querySelector('#simulate')
-        var downloadCSV = null;
+        var div1 = null;
 
-        downloadFile.addEventListener("click", async () => {
-            if (downloadCSV != null)
-                dfd.toCSV(downloadCSV, { fileName: "charge.csv", download: true });
+        const downloadFile1 = document.querySelector('#download1')
+        downloadFile1.addEventListener("click", async () => {
+            if (div2 != null)
+                dfd.toCSV(div1, { fileName: "div1.csv", download: true });
         })
+        const downloadFile2 = document.querySelector('#download2')
+        downloadFile2.addEventListener("click", async () => {
+            if (div2 != null)
+                dfd.toCSV(div2, { fileName: "div2.csv", download: true });
+        })
+        const downloadFile3 = document.querySelector('#download3')
+        downloadFile3.addEventListener("click", async () => {
+            if (div3 != null)
+                dfd.toCSV(div3, { fileName: "div3.csv", download: true });
+        })
+        const downloadFile4 = document.querySelector('#download4')
+        downloadFile4.addEventListener("click", async () => {
+            if (div4 != null)
+                dfd.toCSV(div4, { fileName: "div4.csv", download: true });
+        })
+        result = []
 
         simulation.addEventListener("click", async () => {
             if(inputFile == null) return
@@ -215,12 +231,13 @@
                     const day = date.getDay();
                     return day
                 }));
-                powerdata.plot("div1").table() //display csv as table
+                div1 = powerdata;
+                div1.plot("div1").table() //display csv as table
                 downloadCSV = powerdata
                 new_df = powerdata.setIndex({ column: '日期', drop: true }); //resets the index to Date column
-                console.log(new_df)
+                div2 = new_df
                 // new_df.head().print()
-                new_df.plot("div2").line({
+                div2.plot("div2").line({
                     config: {
                         columns: ["瞬时有功", "储能", "收入", "总功率"]
                     }
@@ -229,12 +246,14 @@
                 let group_df = powerdata
                 group_df = group_df.drop({ columns: ["日期", "date","weekday"], inplace: false })
                 new_df_2 = group_df.groupby(["month"]).max()
-                new_df_2.plot("div3").table() 
+                div3 = new_df_2;
+                div3.plot("div3").table() 
                 max_power_all_momey =  new_df_2['总功率_max'].sum()* 40
                 max_power_current_momey =  new_df_2['瞬时有功_max'].sum() * 40
                 total_money_gain = new_df_2["收入_max"].max()
                 transform_capacity_momey =  transform_capacity * 30   * new_df_2.index.length
                 total_cost =  pack_number  * 400000 
+                console.log("设备数" + pack_number )
                 console.log("储能总利润" + total_money_gain )
                 console.log( "储能容量费用" + max_power_all_momey)
                 console.log("原始容量费用"  + max_power_current_momey)
@@ -242,10 +261,15 @@
                 //console.log("可变容量总收益"+  (total_money_gain -  max_power_all_momey + max_power_current_momey)) 
                // console.log("可变容量费用差"+  (total_money_gain + max_power_current_momey - transform_capacity_momey)) 
                 console.log("设备成本"+ total_cost ) 
-                console.log("固定容量投资回报率"+ total_cost /  ((total_money_gain + max_power_current_momey - transform_capacity_momey) /11 * 12) )
-                console.log("可变容量投资回报率"+ total_cost /  ((total_money_gain - max_power_all_momey + max_power_current_momey)/11 * 12)) 
-
+                rate_fix_power_money = total_cost /  ((total_money_gain + max_power_current_momey - transform_capacity_momey) /11 * 12) 
+                console.log("固定容量投资回报率"+ rate_fix_power_money)
+                rate_var_power_money = total_cost /  ((total_money_gain - max_power_all_momey + max_power_current_momey)/11 * 12)
+                console.log("可变容量投资回报率"+ rate_var_power_money) 
+                result.push([pack_number, total_money_gain.toFixed(2), max_power_all_momey, max_power_current_momey, transform_capacity_momey, total_cost, rate_fix_power_money.toFixed(2), rate_var_power_money.toFixed(2)])
                 //document.getElementById('div4').appendChild(powerpack_state.pack_momey_gain);
+                resultdf = new dfd.DataFrame(result, {columns: ["设备数", "储能总利润", "储能容量费用", "原始容量费用", "固定容量费用", "设备成本", "固定容量投资回报率", "可变容量投资回报率"]})
+                div4 = resultdf
+                div4.plot("div4").table()
             }
             if(extension == "xls") {
                 dfd.readExcel(file).then((df) => {
@@ -269,7 +293,7 @@
                 };
             }
             else {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
-                alert("File is not support.")
+                alert("仅支持xls和csv格式")
             } 
         })
 
