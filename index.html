@@ -14,7 +14,8 @@
 <body>
     <h2>储能站投资回报计算</h2>
     <div><a>变压器容量功率:</a><input type="text" id="transformCapacity" value="4450"><a>KW</a></div>
-    <div><a>储能站个数:</a><input type="text" id="packNumber" value="15"></div>
+    <div><a>储能站个数区间:</a><input type="text" id="packNumberL" value="10">---<input type="text" id="packNumberH" value="15"></div>
+    <div><a>储能站售价</a><input type="text" id="packPrice" value="400000">
     <input type="file" id="file" name="file">
     <button id="simulate">计算</button>
     <div id="div1"></div><button id="download1">下载</button>
@@ -102,23 +103,25 @@
             const file = inputFile.files[0]
             const fileName = file.name
             const extension = fileName.substring(fileName.lastIndexOf('.') + 1);
-            var inputValue = document.getElementById("packNumber").value;
-            var pack_number = parseInt(inputValue)
-            inputValue = document.getElementById("transformCapacity").value;
-            var transform_capacity = parseInt(inputValue)
-            const powerpack = {
+            const pack_numberH = parseInt(document.getElementById("packNumberH").value)
+            const pack_numberL = parseInt(document.getElementById("packNumberL").value)
+            const pack_price = parseInt(document.getElementById("packPrice").value)
+            var transform_capacity = parseInt(document.getElementById("transformCapacity").value)
+
+            var powerpack = {
                 pack_max_capacity: 215,
                 pack_max_power: 100,
-                pack_number: pack_number,
                 transform_capacity: transform_capacity * 0.95,
                 charge_efficiency: 0.94,
                 dicharge_efficiency: 0.94,
-                Totalpower: 0
+                
             }
 
             var powerpack_state = {
                 pack_current_power: 0,
-                pack_momey_gain: 0
+                pack_momey_gain: 0,
+                total_power: 0,
+                pack_number: 0,
             }
 
             const pack_charge_rate_night = 0.33
@@ -148,22 +151,22 @@
 
             function charge(user_power, rate) {
                 if (user_power < 0) user_power = 0;
-                total = powerpack.pack_max_power * powerpack.pack_number
+                total = powerpack.pack_max_power * powerpack_state.pack_number
                 charge_power = total * rate
                 if (charge_power > powerpack.transform_capacity - user_power)
                     charge_power = powerpack.transform_capacity - user_power
-                if (powerpack_state.pack_current_power + charge_power * 0.25 * powerpack.charge_efficiency > powerpack.pack_number * powerpack.pack_max_capacity)
-                    charge_power = (powerpack.pack_number * powerpack.pack_max_capacity - powerpack_state.pack_current_power) / powerpack.charge_efficiency * 4;
+                if (powerpack_state.pack_current_power + charge_power * 0.25 * powerpack.charge_efficiency > powerpack_state.pack_number * powerpack.pack_max_capacity)
+                    charge_power = (powerpack_state.pack_number * powerpack.pack_max_capacity - powerpack_state.pack_current_power) / powerpack.charge_efficiency * 4;
                 dellta = charge_power * 0.25
                 //console.log("over" + (powerpack.transform_capacity - charge_power - user_power))
                 powerpack_state.pack_current_power += dellta * powerpack.charge_efficiency//* powerpack.charge_efficiency; //for 0.25 hour
                 powerpack_state.pack_momey_gain -= dellta * powerprice.valley_time.price;
-                powerpack.Totalpower = charge_power + user_power;
+                powerpack_state.total_power = charge_power + user_power;
             }
 
             function discharge(user_power) {
                 if (user_power < 0) user_power = 0;
-                total = powerpack.pack_max_power * powerpack.pack_number
+                total = powerpack.pack_max_power * powerpack_state.pack_number
                 discharge_power = total
                 if (discharge_power > user_power)
                     discharge_power = user_power
@@ -173,11 +176,11 @@
                 //console.log(dellta)
                 powerpack_state.pack_current_power -= dellta / powerpack.dicharge_efficiency //for 0.25 hour;
                 powerpack_state.pack_momey_gain += dellta * powerprice.peak_time.price;
-                powerpack.Totalpower = user_power - discharge_power;
+                powerpack_state.total_power = user_power - discharge_power;
             }
 
             function keep(user_power) {
-                powerpack.Totalpower = user_power ;
+                powerpack_state.total_power = user_power ;
             }
 
             function work(df) {
@@ -211,48 +214,49 @@
                     // console.log(hour)
                     // console.log(powerpack_state.pack_current_power)
                     // console.log(powerpack_state.pack_momey_gain)
-                    // console.log(powerpack.Totalpower)
-                    return [col[0], col[1], powerpack_state.pack_current_power, powerpack_state.pack_momey_gain, powerpack.Totalpower]
+                    // console.log(powerpack_state.total_power)
+                    return [col[0], col[1], powerpack_state.pack_current_power, powerpack_state.pack_momey_gain, powerpack_state.total_power]
                 }
                 //console.log(powerdata)
-                powerdata = powerdata.apply(work, { axis: 1 })
-                powerdata = powerdata.addColumn('month', powerdata['日期'].apply( (x) => {
+                
+                for (var pack_number = pack_numberL;pack_number <= pack_numberH; pack_number++) {
+                    powerpack_state = {
+                        pack_current_power: 0,
+                        pack_momey_gain: 0,
+                        total_power: 0,
+                        pack_number: pack_number,
+                    }
+                temp_powerdata = powerdata.apply(work, { axis: 1 })
+                temp_powerdata = temp_powerdata.addColumn('month', temp_powerdata['日期'].apply( (x) => {
                     const date = new Date(x.replace('\t', ''))
                     const month = date.getMonth() + 1;
                     return month
                 }));
-                powerdata = powerdata.addColumn('date', powerdata['日期'].apply( (x) => {
+                temp_powerdata = temp_powerdata.addColumn('date', temp_powerdata['日期'].apply( (x) => {
                     const date = new Date(x.replace('\t', ''))
                     const day = date.getDate();
                     return day
                 }));
-                powerdata = powerdata.addColumn('weekday', powerdata['日期'].apply( (x) => {
+                temp_powerdata = temp_powerdata.addColumn('weekday', temp_powerdata['日期'].apply( (x) => {
                     const date = new Date(x.replace('\t', ''))
                     const day = date.getDay();
                     return day
                 }));
-                div1 = powerdata;
-                div1.plot("div1").table() //display csv as table
-                downloadCSV = powerdata
-                new_df = powerdata.setIndex({ column: '日期', drop: true }); //resets the index to Date column
+                div1 = temp_powerdata;
+
+                new_df = temp_powerdata.setIndex({ column: '日期', drop: true }); //resets the index to Date column
                 div2 = new_df
                 // new_df.head().print()
-                div2.plot("div2").line({
-                    config: {
-                        columns: ["瞬时有功", "储能", "收入", "总功率"]
-                    }
-                })  //makes a timeseries plot
 
-                let group_df = powerdata
+                let group_df = temp_powerdata
                 group_df = group_df.drop({ columns: ["日期", "date","weekday"], inplace: false })
                 new_df_2 = group_df.groupby(["month"]).max()
                 div3 = new_df_2;
-                div3.plot("div3").table() 
                 max_power_all_momey =  new_df_2['总功率_max'].sum()* 40
                 max_power_current_momey =  new_df_2['瞬时有功_max'].sum() * 40
                 total_money_gain = new_df_2["收入_max"].max()
                 transform_capacity_momey =  transform_capacity * 30   * new_df_2.index.length
-                total_cost =  pack_number  * 400000 
+                total_cost =  pack_number  * pack_price 
                 console.log("设备数" + pack_number )
                 console.log("储能总利润" + total_money_gain )
                 console.log( "储能容量费用" + max_power_all_momey)
@@ -261,14 +265,22 @@
                 //console.log("可变容量总收益"+  (total_money_gain -  max_power_all_momey + max_power_current_momey)) 
                // console.log("可变容量费用差"+  (total_money_gain + max_power_current_momey - transform_capacity_momey)) 
                 console.log("设备成本"+ total_cost ) 
-                rate_fix_power_money = total_cost /  ((total_money_gain + max_power_current_momey - transform_capacity_momey) /11 * 12) 
-                console.log("固定容量投资回报率"+ rate_fix_power_money)
-                rate_var_power_money = total_cost /  ((total_money_gain - max_power_all_momey + max_power_current_momey)/11 * 12)
-                console.log("可变容量投资回报率"+ rate_var_power_money) 
+                rate_fix_power_money = total_cost /  ((total_money_gain + max_power_current_momey - transform_capacity_momey) /new_df_2.index.length * 12) 
+                console.log("固定容量投资回报年数"+ rate_fix_power_money)
+                rate_var_power_money = total_cost /  ((total_money_gain - max_power_all_momey + max_power_current_momey)/new_df_2.index.length * 12)
+                console.log("可变容量投资回报年数"+ rate_var_power_money) 
                 result.push([pack_number, total_money_gain.toFixed(2), max_power_all_momey, max_power_current_momey, transform_capacity_momey, total_cost, rate_fix_power_money.toFixed(2), rate_var_power_money.toFixed(2)])
                 //document.getElementById('div4').appendChild(powerpack_state.pack_momey_gain);
-                resultdf = new dfd.DataFrame(result, {columns: ["设备数", "储能总利润", "储能容量费用", "原始容量费用", "固定容量费用", "设备成本", "固定容量投资回报率", "可变容量投资回报率"]})
+                resultdf = new dfd.DataFrame(result, {columns: ["设备数", "储能总利润", "储能容量费用", "原始容量费用", "固定容量费用", "设备成本", "固定容量投资回报年数", "可变容量投资回报年数"]})
                 div4 = resultdf
+                }
+                div1.plot("div1").table() //display csv as table
+                div2.plot("div2").line({
+                    config: {
+                        columns: ["瞬时有功", "储能", "收入", "总功率"]
+                    }
+                })  //makes a timeseries plot
+                div3.plot("div3").table() 
                 div4.plot("div4").table()
             }
             if(extension == "xls") {
