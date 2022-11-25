@@ -13,7 +13,10 @@
 
 <body>
     <h2>储能站投资回报计算</h2>
-    <div><a>变压器容量功率:</a><input type="text" id="transformCapacity" value="4450"><a>KW</a></div>
+    <div><a>变压器容量功率:</a><input type="text" id="transformCapacity" value="4450"><a>KW</a><select id="fixUnfix">
+        <option value="fix">固定容量费用</option>
+        <option value="unfix">可变容量费用</option>
+    </select></div>
     <div><a>储能站个数区间:</a><input type="text" id="packNumberL" value="10">---<input type="text" id="packNumberH" value="15"></div>
     <div><a>储能站售价</a><input type="text" id="packPrice" value="400000">
     <input type="file" id="file" name="file">
@@ -99,7 +102,7 @@
         result = []
 
         simulation.addEventListener("click", async () => {
-            if(inputFile == null) return
+            if(inputFile == null || inputFile.files[0] == null) {alert("请输入文件"); return}
             const file = inputFile.files[0]
             const fileName = file.name
             const extension = fileName.substring(fileName.lastIndexOf('.') + 1);
@@ -107,6 +110,9 @@
             const pack_numberL = parseInt(document.getElementById("packNumberL").value)
             const pack_price = parseInt(document.getElementById("packPrice").value)
             var transform_capacity = parseInt(document.getElementById("transformCapacity").value)
+
+            var fix=document.getElementById('fixUnfix');
+            var fixUnfix=fix.selectedIndex;
 
             var powerpack = {
                 pack_max_capacity: 215,
@@ -227,17 +233,17 @@
                         pack_number: pack_number,
                     }
                 temp_powerdata = powerdata.apply(work, { axis: 1 })
-                temp_powerdata = temp_powerdata.addColumn('month', temp_powerdata['日期'].apply( (x) => {
+                temp_powerdata = temp_powerdata.addColumn('月', temp_powerdata['日期'].apply( (x) => {
                     const date = new Date(x.replace('\t', ''))
                     const month = date.getMonth() + 1;
                     return month
                 }));
-                temp_powerdata = temp_powerdata.addColumn('date', temp_powerdata['日期'].apply( (x) => {
+                temp_powerdata = temp_powerdata.addColumn('日', temp_powerdata['日期'].apply( (x) => {
                     const date = new Date(x.replace('\t', ''))
                     const day = date.getDate();
                     return day
                 }));
-                temp_powerdata = temp_powerdata.addColumn('weekday', temp_powerdata['日期'].apply( (x) => {
+                temp_powerdata = temp_powerdata.addColumn('星期', temp_powerdata['日期'].apply( (x) => {
                     const date = new Date(x.replace('\t', ''))
                     const day = date.getDay();
                     return day
@@ -249,8 +255,8 @@
                 // new_df.head().print()
 
                 let group_df = temp_powerdata
-                group_df = group_df.drop({ columns: ["日期", "date","weekday"], inplace: false })
-                new_df_2 = group_df.groupby(["month"]).max()
+                group_df = group_df.drop({ columns: ["日期", "日","星期"], inplace: false })
+                new_df_2 = group_df.groupby(["月"]).max()
                 div3 = new_df_2;
                 max_power_all_momey =  new_df_2['总功率_max'].sum()* 40
                 max_power_current_momey =  new_df_2['瞬时有功_max'].sum() * 40
@@ -265,9 +271,13 @@
                 //console.log("可变容量总收益"+  (total_money_gain -  max_power_all_momey + max_power_current_momey)) 
                // console.log("可变容量费用差"+  (total_money_gain + max_power_current_momey - transform_capacity_momey)) 
                 console.log("设备成本"+ total_cost ) 
-                rate_fix_power_money = total_cost /  ((total_money_gain + max_power_current_momey - transform_capacity_momey) /new_df_2.index.length * 12) 
+                if (fixUnfix ==1 ) 
+                    current_momey = max_power_current_momey;
+                else 
+                    current_momey = transform_capacity_momey
+                rate_fix_power_money = total_cost /  ((total_money_gain + current_momey - transform_capacity_momey) /new_df_2.index.length * 12) 
                 console.log("固定容量投资回报年数"+ rate_fix_power_money)
-                rate_var_power_money = total_cost /  ((total_money_gain - max_power_all_momey + max_power_current_momey)/new_df_2.index.length * 12)
+                rate_var_power_money = total_cost /  ((total_money_gain - max_power_all_momey + current_momey)/new_df_2.index.length * 12)
                 console.log("可变容量投资回报年数"+ rate_var_power_money) 
                 result.push([pack_number, total_money_gain.toFixed(2), max_power_all_momey, max_power_current_momey, transform_capacity_momey, total_cost, rate_fix_power_money.toFixed(2), rate_var_power_money.toFixed(2)])
                 //document.getElementById('div4').appendChild(powerpack_state.pack_momey_gain);
