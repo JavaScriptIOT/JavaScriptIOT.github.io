@@ -112,17 +112,16 @@
                 const pack_price = parseInt(document.getElementById("packPrice").value)
                 var transform_capacity = parseInt(document.getElementById("transformCapacity").value)
 
-                var fix = document.getElementById('fixUnfix');
-                var fixUnfix = fix.selectedIndex;
-
-                var powerpack = {
+                var powerpack_tamplate = {
                     pack_max_capacity: 215,
                     pack_max_power: 100,
                     transform_capacity: transform_capacity * 0.95,
                     charge_efficiency: 0.94,
                     dicharge_efficiency: 0.94,
-
+                    decay_rate: 0.98
                 }
+
+                var powerpack = {... powerpack_tamplate}
 
                 var powerpack_state = {
                     pack_current_power: 0,
@@ -227,12 +226,24 @@
                     //console.log(powerdata)
 
                     for (var pack_number = pack_numberL; pack_number <= pack_numberH; pack_number++) {
+                        const max_year = 10;
+                        let fix_return_year = max_year;
+                        let unfix_return_year = max_year;
+                        fix_all_gain_money = 0;
+                        unfix_all_gain_money = 0;
+                        powerpack = {... powerpack_tamplate}
+                        for (var year = 0; year <= max_year ; year = year+1) {
+
                         powerpack_state = {
                             pack_current_power: 0,
                             pack_momey_gain: 0,
                             total_power: 0,
                             pack_number: pack_number,
                         }
+
+                        powerpack.pack_max_capacity = powerpack.pack_max_capacity * powerpack.decay_rate;
+                        powerpack.pack_max_power = powerpack.pack_max_power * powerpack.decay_rate;
+
                         temp_powerdata = powerdata.apply(work, { axis: 1 })
                         temp_powerdata = temp_powerdata.addColumn('月', temp_powerdata['日期'].apply((x) => {
                             const date = new Date(x.replace('\t', ''))
@@ -258,6 +269,7 @@
                         let group_df = temp_powerdata
                         group_df = group_df.drop({ columns: ["日期", "日", "星期"], inplace: false })
                         new_df_2 = group_df.groupby(["月"]).max()
+
                         div3 = new_df_2;
                         max_power_all_momey = new_df_2['总功率_max'].sum() * 40
                         max_power_current_momey = new_df_2['瞬时有功_max'].sum() * 40
@@ -269,18 +281,30 @@
                         console.log("储能容量费用" + max_power_all_momey)
                         console.log("原始容量费用" + max_power_current_momey)
                         console.log("固定容量费用" + transform_capacity_momey)
-                        //console.log("可变容量总收益"+  (total_money_gain -  max_power_all_momey + max_power_current_momey)) 
-                        // console.log("可变容量费用差"+  (total_money_gain + max_power_current_momey - transform_capacity_momey)) 
+
                         console.log("设备成本" + total_cost)
-                        if (fixUnfix == 1)
-                            current_momey = max_power_current_momey;
-                        else
-                            current_momey = transform_capacity_momey
-                        rate_fix_power_money = total_cost / ((total_money_gain + current_momey - transform_capacity_momey) / new_df_2.index.length * 12)
-                        console.log("固定容量投资回报年数" + rate_fix_power_money)
-                        rate_var_power_money = total_cost / ((total_money_gain - max_power_all_momey + current_momey) / new_df_2.index.length * 12)
-                        console.log("可变容量投资回报年数" + rate_var_power_money)
-                        result.push([pack_number, total_money_gain.toFixed(2), max_power_all_momey, max_power_current_momey, transform_capacity_momey, total_cost, rate_fix_power_money.toFixed(2), rate_var_power_money.toFixed(2)])
+                        console.log("年数" + year)
+                        var fix_year_earning = (total_money_gain + max_power_current_momey - transform_capacity_momey) /new_df_2.index.length * 12
+                        if (fix_all_gain_money >= 0)
+                        if (fix_all_gain_money + fix_year_earning > total_cost) {
+                            fix_return_year = year + (total_cost - fix_all_gain_money) / fix_year_earning
+                            fix_all_gain_money = -1 
+                        }
+                        else {
+                            fix_all_gain_money = fix_all_gain_money + fix_year_earning
+                        }
+
+                        var unfix_year_earning = (total_money_gain + max_power_current_momey - max_power_all_momey) /new_df_2.index.length * 12
+                        if (unfix_all_gain_money >= 0)
+                        if (unfix_all_gain_money + unfix_year_earning > total_cost) {
+                            unfix_return_year = year + (total_cost - unfix_all_gain_money) / unfix_year_earning
+                            unfix_all_gain_money = -1 
+                        }
+                        else {
+                            unfix_all_gain_money = unfix_all_gain_money + unfix_year_earning
+                        }
+                        }
+                        result.push([pack_number, total_money_gain.toFixed(2), max_power_all_momey, max_power_current_momey, transform_capacity_momey, total_cost, fix_return_year.toFixed(2), unfix_return_year.toFixed(2)])
                         //document.getElementById('div4').appendChild(powerpack_state.pack_momey_gain);
                         resultdf = new dfd.DataFrame(result, { columns: ["设备数", "储能总利润", "储能容量费用", "原始容量费用", "固定容量费用", "设备成本", "固定容量投资回报年数", "可变容量投资回报年数"] })
                         div4 = resultdf
