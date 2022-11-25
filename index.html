@@ -7,377 +7,378 @@
     <script src="https://cdn.jsdelivr.net/npm/danfojs@1.1.2/lib/bundle.js"></script>
     <script src="https://cdn.bootcss.com/vConsole/3.2.0/vconsole.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/jschardet/3.0.0/jschardet.min.js"></script>
-    
+
     <title>Document</title>
 </head>
 
 <body>
     <h2>储能站投资回报计算</h2>
     <div><a>变压器容量功率:</a><input type="text" id="transformCapacity" value="4450"><a>KW</a><select id="fixUnfix">
-        <option value="fix">固定容量费用</option>
-        <option value="unfix">可变容量费用</option>
-    </select></div>
-    <div><a>储能站个数区间:</a><input type="text" id="packNumberL" value="10">---<input type="text" id="packNumberH" value="15"></div>
+            <option value="fix">固定容量费用</option>
+            <option value="unfix">可变容量费用</option>
+        </select></div>
+    <div><a>储能站个数区间:</a><input type="text" id="packNumberL" value="10">---<input type="text" id="packNumberH"
+            value="15"></div>
     <div><a>储能站售价</a><input type="text" id="packPrice" value="400000">
-    <input type="file" id="file" name="file">
-    <button id="simulate">计算</button>
-    <div id="div1"></div><button id="download1">下载</button>
-    <div id="div2"></div><button id="download2">下载</button>
-    <div id="div3"></div><button id="download3">下载</button>
-    <div id="div4"></div><button id="download4">下载</button>
+        <input type="file" id="file" name="file">
+        <button id="simulate">计算</button>
+        <div id="div1"></div><button id="download1">下载</button>
+        <div id="div2"></div><button id="download2">下载</button>
+        <div id="div3"></div><button id="download3">下载</button>
+        <div id="div4"></div><button id="download4">下载</button>
 
 
 
-<!-- 一键计算节能空间——填写 -->
-<div class="g_c3one">
-    <div class="g_c3onetan">
-        <h2 class="g_word2">空压机节能空间计算</h2>
-        <div class="g_c3onecen">
-            <div class="g_c3onenr clearfix">
-                <div class="g_c3onenr2 fl">工频空压机数量:</div>
-                <div class="g_c3onenr3 fl"><input type="text" id="type_a">台</div>
-                <div class="g_c3onenr4 fl"></div>
-            </div>
-            <div class="g_c3onenr clearfix">
-                <div class="g_c3onenr2 fl">工频总功率:</div>
-                <div class="g_c3onenr3 fl"><input type="text" id="type_b">KW</div>
-                <div class="g_c3onenr4 fl"></div>
-            </div>
-            <div class="g_c3onenr clearfix">
-                <div class="g_c3onenr2 fl">工频平均加载率:</div>
-                <div class="g_c3onenr3 fl"><input type="text" id="type_c">%</div>
-                <div class="g_c3onenr4 fl"></div>
-            </div>
-            <div class="g_c3onenr clearfix">
-                <div class="g_c3onenr2 fl">变频空压机数量:</div>
-                <div class="g_c3onenr3 fl"><input type="text" id="type_d">台</div>
-                <div class="g_c3onenr4 fl"></div>
-            </div>
-            <div class="g_c3onenr clearfix">
-                <div class="g_c3onenr2 fl">变频总功率:</div>
-                <div class="g_c3onenr3 fl"><input type="text" id="type_e">KW</div>
-                <div class="g_c3onenr4 fl"></div>
-            </div>
-            <div class="g_c3onenr clearfix">
-                <div class="g_c3onenr2 fl">变频平均负载率:</div>
-                <div class="g_c3onenr3 fl"><input type="text" id="type_f">%</div>
-                <div class="g_c3onenr4 fl"></div>
+        <!-- 一键计算节能空间——填写 -->
+        <div class="g_c3one">
+            <div class="g_c3onetan">
+                <h2 class="g_word2">空压机节能空间计算</h2>
+                <div class="g_c3onecen">
+                    <div class="g_c3onenr clearfix">
+                        <div class="g_c3onenr2 fl">工频空压机数量:</div>
+                        <div class="g_c3onenr3 fl"><input type="text" id="type_a">台</div>
+                        <div class="g_c3onenr4 fl"></div>
+                    </div>
+                    <div class="g_c3onenr clearfix">
+                        <div class="g_c3onenr2 fl">工频总功率:</div>
+                        <div class="g_c3onenr3 fl"><input type="text" id="type_b">KW</div>
+                        <div class="g_c3onenr4 fl"></div>
+                    </div>
+                    <div class="g_c3onenr clearfix">
+                        <div class="g_c3onenr2 fl">工频平均加载率:</div>
+                        <div class="g_c3onenr3 fl"><input type="text" id="type_c">%</div>
+                        <div class="g_c3onenr4 fl"></div>
+                    </div>
+                    <div class="g_c3onenr clearfix">
+                        <div class="g_c3onenr2 fl">变频空压机数量:</div>
+                        <div class="g_c3onenr3 fl"><input type="text" id="type_d">台</div>
+                        <div class="g_c3onenr4 fl"></div>
+                    </div>
+                    <div class="g_c3onenr clearfix">
+                        <div class="g_c3onenr2 fl">变频总功率:</div>
+                        <div class="g_c3onenr3 fl"><input type="text" id="type_e">KW</div>
+                        <div class="g_c3onenr4 fl"></div>
+                    </div>
+                    <div class="g_c3onenr clearfix">
+                        <div class="g_c3onenr2 fl">变频平均负载率:</div>
+                        <div class="g_c3onenr3 fl"><input type="text" id="type_f">%</div>
+                        <div class="g_c3onenr4 fl"></div>
+                    </div>
+                </div>
+                <button id="air">计算</button>
             </div>
         </div>
-        <button id="air">计算</button>
-    </div>
-</div>
 
-    <script>
-        var vConsole = new VConsole();
+        <script>
+            var vConsole = new VConsole();
 
-        window.addEventListener('load', function () {
-            alert("程序加载完成")
-        })
+            window.addEventListener('load', function () {
+                alert("程序加载完成")
+            })
 
-        const inputFile = document.querySelector('#file')
-        const simulation  = document.querySelector('#simulate')
-        var div1 = null;
+            const inputFile = document.querySelector('#file')
+            const simulation = document.querySelector('#simulate')
+            var div1 = null;
 
-        const downloadFile1 = document.querySelector('#download1')
-        downloadFile1.addEventListener("click", async () => {
-            if (div2 != null)
-                dfd.toCSV(div1, { fileName: "div1.csv", download: true });
-        })
-        const downloadFile2 = document.querySelector('#download2')
-        downloadFile2.addEventListener("click", async () => {
-            if (div2 != null)
-                dfd.toCSV(div2, { fileName: "div2.csv", download: true });
-        })
-        const downloadFile3 = document.querySelector('#download3')
-        downloadFile3.addEventListener("click", async () => {
-            if (div3 != null)
-                dfd.toCSV(div3, { fileName: "div3.csv", download: true });
-        })
-        const downloadFile4 = document.querySelector('#download4')
-        downloadFile4.addEventListener("click", async () => {
-            if (div4 != null)
-                dfd.toCSV(div4, { fileName: "div4.csv", download: true });
-        })
-        result = []
+            const downloadFile1 = document.querySelector('#download1')
+            downloadFile1.addEventListener("click", async () => {
+                if (div2 != null)
+                    dfd.toCSV(div1, { fileName: "div1.csv", download: true });
+            })
+            const downloadFile2 = document.querySelector('#download2')
+            downloadFile2.addEventListener("click", async () => {
+                if (div2 != null)
+                    dfd.toCSV(div2, { fileName: "div2.csv", download: true });
+            })
+            const downloadFile3 = document.querySelector('#download3')
+            downloadFile3.addEventListener("click", async () => {
+                if (div3 != null)
+                    dfd.toCSV(div3, { fileName: "div3.csv", download: true });
+            })
+            const downloadFile4 = document.querySelector('#download4')
+            downloadFile4.addEventListener("click", async () => {
+                if (div4 != null)
+                    dfd.toCSV(div4, { fileName: "div4.csv", download: true });
+            })
+            result = []
 
-        simulation.addEventListener("click", async () => {
-            if(inputFile == null || inputFile.files[0] == null) {alert("请输入文件"); return}
-            const file = inputFile.files[0]
-            const fileName = file.name
-            const extension = fileName.substring(fileName.lastIndexOf('.') + 1);
-            const pack_numberH = parseInt(document.getElementById("packNumberH").value)
-            const pack_numberL = parseInt(document.getElementById("packNumberL").value)
-            const pack_price = parseInt(document.getElementById("packPrice").value)
-            var transform_capacity = parseInt(document.getElementById("transformCapacity").value)
+            simulation.addEventListener("click", async () => {
+                if (inputFile == null || inputFile.files[0] == null) { alert("请输入文件"); return }
+                const file = inputFile.files[0]
+                const fileName = file.name
+                const extension = fileName.substring(fileName.lastIndexOf('.') + 1);
+                const pack_numberH = parseInt(document.getElementById("packNumberH").value)
+                const pack_numberL = parseInt(document.getElementById("packNumberL").value)
+                const pack_price = parseInt(document.getElementById("packPrice").value)
+                var transform_capacity = parseInt(document.getElementById("transformCapacity").value)
 
-            var fix=document.getElementById('fixUnfix');
-            var fixUnfix=fix.selectedIndex;
+                var fix = document.getElementById('fixUnfix');
+                var fixUnfix = fix.selectedIndex;
 
-            var powerpack = {
-                pack_max_capacity: 215,
-                pack_max_power: 100,
-                transform_capacity: transform_capacity * 0.95,
-                charge_efficiency: 0.94,
-                dicharge_efficiency: 0.94,
-                
-            }
-
-            var powerpack_state = {
-                pack_current_power: 0,
-                pack_momey_gain: 0,
-                total_power: 0,
-                pack_number: 0,
-            }
-
-            const pack_charge_rate_night = 0.33
-
-            const powerprice = {
-                peak_time: {
-                    time: [{
-                        start_hour: 9,
-                        end_hour: 11
-                    }, {
-                        start_hour: 15,
-                        end_hour: 17
-                    },], price: 1.009899971
-                },
-                valley_time: {
-                    time: [{
-                        start_hour: 0,
-                        end_hour: 8
-                    }, {
-                        start_hour: 11,
-                        end_hour: 13
-                    },], price: 0.118399996
+                var powerpack = {
+                    pack_max_capacity: 215,
+                    pack_max_power: 100,
+                    transform_capacity: transform_capacity * 0.95,
+                    charge_efficiency: 0.94,
+                    dicharge_efficiency: 0.94,
 
                 }
 
-            }
-
-            function charge(user_power, rate) {
-                if (user_power < 0) user_power = 0;
-                total = powerpack.pack_max_power * powerpack_state.pack_number
-                charge_power = total * rate
-                if (charge_power > powerpack.transform_capacity - user_power)
-                    charge_power = powerpack.transform_capacity - user_power
-                if (powerpack_state.pack_current_power + charge_power * 0.25 * powerpack.charge_efficiency > powerpack_state.pack_number * powerpack.pack_max_capacity)
-                    charge_power = (powerpack_state.pack_number * powerpack.pack_max_capacity - powerpack_state.pack_current_power) / powerpack.charge_efficiency * 4;
-                dellta = charge_power * 0.25
-                //console.log("over" + (powerpack.transform_capacity - charge_power - user_power))
-                powerpack_state.pack_current_power += dellta * powerpack.charge_efficiency//* powerpack.charge_efficiency; //for 0.25 hour
-                powerpack_state.pack_momey_gain -= dellta * powerprice.valley_time.price;
-                powerpack_state.total_power = charge_power + user_power;
-            }
-
-            function discharge(user_power) {
-                if (user_power < 0) user_power = 0;
-                total = powerpack.pack_max_power * powerpack_state.pack_number
-                discharge_power = total
-                if (discharge_power > user_power)
-                    discharge_power = user_power
-                if (powerpack_state.pack_current_power - discharge_power * 0.25 / powerpack.dicharge_efficiency < 0)
-                    discharge_power = powerpack_state.pack_current_power * powerpack.dicharge_efficiency * 4
-                dellta = discharge_power * 0.25
-                //console.log(dellta)
-                powerpack_state.pack_current_power -= dellta / powerpack.dicharge_efficiency //for 0.25 hour;
-                powerpack_state.pack_momey_gain += dellta * powerprice.peak_time.price;
-                powerpack_state.total_power = user_power - discharge_power;
-            }
-
-            function keep(user_power) {
-                powerpack_state.total_power = user_power ;
-            }
-
-            function work(df) {
-//                df = df.head(10000)
-//                df = df.tail(3000)
-
-                df.sortValues("日期", { ascending: true, inplace: true })
-
-                var powerdata = df.loc({ columns: ['日期', '瞬时有功'] })
-                powerdata = powerdata.dropNa({ axis: 1 })
-                var d = new Array(powerdata.index.length).fill(0.1)
-                powerdata.addColumn('储能', d, { inplace: true })
-                powerdata.addColumn('收入', d, { inplace: true })
-                powerdata.addColumn('总功率', d, { inplace: true })
-
-                function work(col) {
-                    const date = new Date(col[0].replace('\t', ''))
-                    const hour = date.getHours();
-                    const power = col[1];
-                    if (hour >= powerprice.valley_time.time[0].start_hour && hour < powerprice.valley_time.time[0].end_hour)
-                        charge(power, pack_charge_rate_night)
-                    else if (hour >= powerprice.valley_time.time[1].start_hour && hour < powerprice.valley_time.time[1].end_hour)
-                        charge(power, 0.9)
-                    else if (hour >= powerprice.peak_time.time[0].start_hour && hour < powerprice.peak_time.time[0].end_hour)
-                        discharge(power)
-                    else if (hour >= powerprice.peak_time.time[1].start_hour && hour < powerprice.peak_time.time[1].end_hour)
-                        discharge(power)
-                    else 
-                        keep(power)
-                    // console.log(col[0])
-                    // console.log(hour)
-                    // console.log(powerpack_state.pack_current_power)
-                    // console.log(powerpack_state.pack_momey_gain)
-                    // console.log(powerpack_state.total_power)
-                    return [col[0], col[1], powerpack_state.pack_current_power, powerpack_state.pack_momey_gain, powerpack_state.total_power]
+                var powerpack_state = {
+                    pack_current_power: 0,
+                    pack_momey_gain: 0,
+                    total_power: 0,
+                    pack_number: 0,
                 }
-                //console.log(powerdata)
-                
-                for (var pack_number = pack_numberL;pack_number <= pack_numberH; pack_number++) {
-                    powerpack_state = {
-                        pack_current_power: 0,
-                        pack_momey_gain: 0,
-                        total_power: 0,
-                        pack_number: pack_number,
+
+                const pack_charge_rate_night = 0.33
+
+                const powerprice = {
+                    peak_time: {
+                        time: [{
+                            start_hour: 9,
+                            end_hour: 11
+                        }, {
+                            start_hour: 15,
+                            end_hour: 17
+                        },], price: 1.009899971
+                    },
+                    valley_time: {
+                        time: [{
+                            start_hour: 0,
+                            end_hour: 8
+                        }, {
+                            start_hour: 11,
+                            end_hour: 13
+                        },], price: 0.118399996
+
                     }
-                temp_powerdata = powerdata.apply(work, { axis: 1 })
-                temp_powerdata = temp_powerdata.addColumn('月', temp_powerdata['日期'].apply( (x) => {
-                    const date = new Date(x.replace('\t', ''))
-                    const month = date.getMonth() + 1;
-                    return month
-                }));
-                temp_powerdata = temp_powerdata.addColumn('日', temp_powerdata['日期'].apply( (x) => {
-                    const date = new Date(x.replace('\t', ''))
-                    const day = date.getDate();
-                    return day
-                }));
-                temp_powerdata = temp_powerdata.addColumn('星期', temp_powerdata['日期'].apply( (x) => {
-                    const date = new Date(x.replace('\t', ''))
-                    const day = date.getDay();
-                    return day
-                }));
-                div1 = temp_powerdata;
 
-                new_df = temp_powerdata.setIndex({ column: '日期', drop: true }); //resets the index to Date column
-                div2 = new_df
-                // new_df.head().print()
-
-                let group_df = temp_powerdata
-                group_df = group_df.drop({ columns: ["日期", "日","星期"], inplace: false })
-                new_df_2 = group_df.groupby(["月"]).max()
-                div3 = new_df_2;
-                max_power_all_momey =  new_df_2['总功率_max'].sum()* 40
-                max_power_current_momey =  new_df_2['瞬时有功_max'].sum() * 40
-                total_money_gain = new_df_2["收入_max"].max()
-                transform_capacity_momey =  transform_capacity * 30   * new_df_2.index.length
-                total_cost =  pack_number  * pack_price 
-                console.log("设备数" + pack_number )
-                console.log("储能总利润" + total_money_gain )
-                console.log( "储能容量费用" + max_power_all_momey)
-                console.log("原始容量费用"  + max_power_current_momey)
-                console.log( "固定容量费用" +  transform_capacity_momey )
-                //console.log("可变容量总收益"+  (total_money_gain -  max_power_all_momey + max_power_current_momey)) 
-               // console.log("可变容量费用差"+  (total_money_gain + max_power_current_momey - transform_capacity_momey)) 
-                console.log("设备成本"+ total_cost ) 
-                if (fixUnfix ==1 ) 
-                    current_momey = max_power_current_momey;
-                else 
-                    current_momey = transform_capacity_momey
-                rate_fix_power_money = total_cost /  ((total_money_gain + current_momey - transform_capacity_momey) /new_df_2.index.length * 12) 
-                console.log("固定容量投资回报年数"+ rate_fix_power_money)
-                rate_var_power_money = total_cost /  ((total_money_gain - max_power_all_momey + current_momey)/new_df_2.index.length * 12)
-                console.log("可变容量投资回报年数"+ rate_var_power_money) 
-                result.push([pack_number, total_money_gain.toFixed(2), max_power_all_momey, max_power_current_momey, transform_capacity_momey, total_cost, rate_fix_power_money.toFixed(2), rate_var_power_money.toFixed(2)])
-                //document.getElementById('div4').appendChild(powerpack_state.pack_momey_gain);
-                resultdf = new dfd.DataFrame(result, {columns: ["设备数", "储能总利润", "储能容量费用", "原始容量费用", "固定容量费用", "设备成本", "固定容量投资回报年数", "可变容量投资回报年数"]})
-                div4 = resultdf
                 }
-                div1.plot("div1").table() //display csv as table
-                div2.plot("div2").line({
-                    config: {
-                        columns: ["瞬时有功", "储能", "收入", "总功率"]
+
+                function charge(user_power, rate) {
+                    if (user_power < 0) user_power = 0;
+                    total = powerpack.pack_max_power * powerpack_state.pack_number
+                    charge_power = total * rate
+                    if (charge_power > powerpack.transform_capacity - user_power)
+                        charge_power = powerpack.transform_capacity - user_power
+                    if (powerpack_state.pack_current_power + charge_power * 0.25 * powerpack.charge_efficiency > powerpack_state.pack_number * powerpack.pack_max_capacity)
+                        charge_power = (powerpack_state.pack_number * powerpack.pack_max_capacity - powerpack_state.pack_current_power) / powerpack.charge_efficiency * 4;
+                    dellta = charge_power * 0.25
+                    //console.log("over" + (powerpack.transform_capacity - charge_power - user_power))
+                    powerpack_state.pack_current_power += dellta * powerpack.charge_efficiency//* powerpack.charge_efficiency; //for 0.25 hour
+                    powerpack_state.pack_momey_gain -= dellta * powerprice.valley_time.price;
+                    powerpack_state.total_power = charge_power + user_power;
+                }
+
+                function discharge(user_power) {
+                    if (user_power < 0) user_power = 0;
+                    total = powerpack.pack_max_power * powerpack_state.pack_number
+                    discharge_power = total
+                    if (discharge_power > user_power)
+                        discharge_power = user_power
+                    if (powerpack_state.pack_current_power - discharge_power * 0.25 / powerpack.dicharge_efficiency < 0)
+                        discharge_power = powerpack_state.pack_current_power * powerpack.dicharge_efficiency * 4
+                    dellta = discharge_power * 0.25
+                    //console.log(dellta)
+                    powerpack_state.pack_current_power -= dellta / powerpack.dicharge_efficiency //for 0.25 hour;
+                    powerpack_state.pack_momey_gain += dellta * powerprice.peak_time.price;
+                    powerpack_state.total_power = user_power - discharge_power;
+                }
+
+                function keep(user_power) {
+                    powerpack_state.total_power = user_power;
+                }
+
+                function work(df) {
+                    //                df = df.head(10000)
+                    //                df = df.tail(3000)
+
+                    df.sortValues("日期", { ascending: true, inplace: true })
+
+                    var powerdata = df.loc({ columns: ['日期', '瞬时有功'] })
+                    powerdata = powerdata.dropNa({ axis: 1 })
+                    var d = new Array(powerdata.index.length).fill(0.1)
+                    powerdata.addColumn('储能', d, { inplace: true })
+                    powerdata.addColumn('收入', d, { inplace: true })
+                    powerdata.addColumn('总功率', d, { inplace: true })
+
+                    function work(col) {
+                        const date = new Date(col[0].replace('\t', ''))
+                        const hour = date.getHours();
+                        const power = col[1];
+                        if (hour >= powerprice.valley_time.time[0].start_hour && hour < powerprice.valley_time.time[0].end_hour)
+                            charge(power, pack_charge_rate_night)
+                        else if (hour >= powerprice.valley_time.time[1].start_hour && hour < powerprice.valley_time.time[1].end_hour)
+                            charge(power, 0.9)
+                        else if (hour >= powerprice.peak_time.time[0].start_hour && hour < powerprice.peak_time.time[0].end_hour)
+                            discharge(power)
+                        else if (hour >= powerprice.peak_time.time[1].start_hour && hour < powerprice.peak_time.time[1].end_hour)
+                            discharge(power)
+                        else
+                            keep(power)
+                        // console.log(col[0])
+                        // console.log(hour)
+                        // console.log(powerpack_state.pack_current_power)
+                        // console.log(powerpack_state.pack_momey_gain)
+                        // console.log(powerpack_state.total_power)
+                        return [col[0], col[1], powerpack_state.pack_current_power, powerpack_state.pack_momey_gain, powerpack_state.total_power]
                     }
-                })  //makes a timeseries plot
-                div3.plot("div3").table() 
-                div4.plot("div4").table()
-            }
-            if(extension == "xls") {
-                dfd.readExcel(file).then((df) => {
-                    work(df) 
-                }).catch(err => {
-                    console.log(err);
-                })
-            }
-            else if (extension == "csv") {
-                const reader = new FileReader();
-                reader.readAsDataURL(file)  // 获取txt文件的base64码
-                reader.onload = function (evt) {
-                    buffer = evt.target.result
-                    ret = jschardet.detect(atob(buffer.split(';base64,')[1]));
-                    console.log(ret)
-                    dfd.readCSV(file, {encoding:ret.encoding}).then((df) => {
-                        work(df) 
+                    //console.log(powerdata)
+
+                    for (var pack_number = pack_numberL; pack_number <= pack_numberH; pack_number++) {
+                        powerpack_state = {
+                            pack_current_power: 0,
+                            pack_momey_gain: 0,
+                            total_power: 0,
+                            pack_number: pack_number,
+                        }
+                        temp_powerdata = powerdata.apply(work, { axis: 1 })
+                        temp_powerdata = temp_powerdata.addColumn('月', temp_powerdata['日期'].apply((x) => {
+                            const date = new Date(x.replace('\t', ''))
+                            const month = date.getMonth() + 1;
+                            return month
+                        }));
+                        temp_powerdata = temp_powerdata.addColumn('日', temp_powerdata['日期'].apply((x) => {
+                            const date = new Date(x.replace('\t', ''))
+                            const day = date.getDate();
+                            return day
+                        }));
+                        temp_powerdata = temp_powerdata.addColumn('星期', temp_powerdata['日期'].apply((x) => {
+                            const date = new Date(x.replace('\t', ''))
+                            const day = date.getDay();
+                            return day
+                        }));
+                        div1 = temp_powerdata;
+
+                        new_df = temp_powerdata.setIndex({ column: '日期', drop: true }); //resets the index to Date column
+                        div2 = new_df
+                        // new_df.head().print()
+
+                        let group_df = temp_powerdata
+                        group_df = group_df.drop({ columns: ["日期", "日", "星期"], inplace: false })
+                        new_df_2 = group_df.groupby(["月"]).max()
+                        div3 = new_df_2;
+                        max_power_all_momey = new_df_2['总功率_max'].sum() * 40
+                        max_power_current_momey = new_df_2['瞬时有功_max'].sum() * 40
+                        total_money_gain = new_df_2["收入_max"].max()
+                        transform_capacity_momey = transform_capacity * 30 * new_df_2.index.length
+                        total_cost = pack_number * pack_price
+                        console.log("设备数" + pack_number)
+                        console.log("储能总利润" + total_money_gain)
+                        console.log("储能容量费用" + max_power_all_momey)
+                        console.log("原始容量费用" + max_power_current_momey)
+                        console.log("固定容量费用" + transform_capacity_momey)
+                        //console.log("可变容量总收益"+  (total_money_gain -  max_power_all_momey + max_power_current_momey)) 
+                        // console.log("可变容量费用差"+  (total_money_gain + max_power_current_momey - transform_capacity_momey)) 
+                        console.log("设备成本" + total_cost)
+                        if (fixUnfix == 1)
+                            current_momey = max_power_current_momey;
+                        else
+                            current_momey = transform_capacity_momey
+                        rate_fix_power_money = total_cost / ((total_money_gain + current_momey - transform_capacity_momey) / new_df_2.index.length * 12)
+                        console.log("固定容量投资回报年数" + rate_fix_power_money)
+                        rate_var_power_money = total_cost / ((total_money_gain - max_power_all_momey + current_momey) / new_df_2.index.length * 12)
+                        console.log("可变容量投资回报年数" + rate_var_power_money)
+                        result.push([pack_number, total_money_gain.toFixed(2), max_power_all_momey, max_power_current_momey, transform_capacity_momey, total_cost, rate_fix_power_money.toFixed(2), rate_var_power_money.toFixed(2)])
+                        //document.getElementById('div4').appendChild(powerpack_state.pack_momey_gain);
+                        resultdf = new dfd.DataFrame(result, { columns: ["设备数", "储能总利润", "储能容量费用", "原始容量费用", "固定容量费用", "设备成本", "固定容量投资回报年数", "可变容量投资回报年数"] })
+                        div4 = resultdf
+                    }
+                    div1.plot("div1").table() //display csv as table
+                    div2.plot("div2").line({
+                        config: {
+                            columns: ["瞬时有功", "储能", "收入", "总功率"]
+                        }
+                    })  //makes a timeseries plot
+                    div3.plot("div3").table()
+                    div4.plot("div4").table()
+                }
+                if (extension == "xls") {
+                    dfd.readExcel(file).then((df) => {
+                        work(df)
                     }).catch(err => {
                         console.log(err);
                     })
-                };
-            }
-            else {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
-                alert("仅支持xls和csv格式")
-            } 
-        })
+                }
+                else if (extension == "csv") {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file)  // 获取txt文件的base64码
+                    reader.onload = function (evt) {
+                        buffer = evt.target.result
+                        ret = jschardet.detect(atob(buffer.split(';base64,')[1]));
+                        console.log(ret)
+                        dfd.readCSV(file, { encoding: ret.encoding }).then((df) => {
+                            work(df)
+                        }).catch(err => {
+                            console.log(err);
+                        })
+                    };
+                }
+                else {
+                    alert("仅支持xls和csv格式")
+                }
+            })
 
-        function cal(a,b,c,d,e,f){
-            c = (parseInt(c)/100).toFixed(1);
-            console.log(c)
-            f = (parseInt(f)/100).toFixed(1);
-            var g = (1 - c).toFixed(1);
-            var h = d - f * d;
-                h=Math.round(h*100)/100;
-            console.log(g);
-            console.log(h);
-            console.log(( g * 0.45 * b + h * 0.1 * e / d ) / (parseInt(b)+parseInt(e)));
-            return (( g * 0.45 * b + h * 0.1 * e / d )/(parseInt(b)+parseInt(e))).toFixed(2);
-            // return ( g * 0.45 * b + h * 0.1 * e / d )/(b+e);
-        }
-        const air = document.querySelector('#air')
-        air.addEventListener("click", async () => {
-            var a = document.getElementById("type_a").value;
-            var b = document.getElementById("type_b").value;
-            var c = document.getElementById("type_c").value;
-            var d = document.getElementById("type_d").value;
-            var e = document.getElementById("type_e").value;
-            var f = document.getElementById("type_f").value;
-            if(!a){
-                alert('请输入工频空压机数量');
-                return;
+            function cal(a, b, c, d, e, f) {
+                c = (parseInt(c) / 100).toFixed(1);
+                console.log(c)
+                f = (parseInt(f) / 100).toFixed(1);
+                var g = (1 - c).toFixed(1);
+                var h = d - f * d;
+                h = Math.round(h * 100) / 100;
+                console.log(g);
+                console.log(h);
+                console.log((g * 0.45 * b + h * 0.1 * e / d) / (parseInt(b) + parseInt(e)));
+                return ((g * 0.45 * b + h * 0.1 * e / d) / (parseInt(b) + parseInt(e))).toFixed(2);
+                // return ( g * 0.45 * b + h * 0.1 * e / d )/(b+e);
             }
-            if(!b){
-                alert('请输入工频总功率');
-                return;
-            }
-            if(!c){
-                alert('请输入工频平均加载率');
-                return;
-            }
-            if(c < 1 || c > 100){
-                alert('工频平均加载率应大于等于1%且小于等于100%');
-                return;
-            }
-            if(!d){
-                alert('请输入变频空压机数量');
-                return;
-            }
-            if(!e){
-                alert('请输入变频总功率');
-                return;
-            }
-            if(!f){
-                alert('请输入变频平均负载率');
-                return;
-            }
-            if(f < 1 || f > 100){
-                alert('变频平均负载率应大于等于1%且小于等于100%');
-                return;
-            }
-            var vals = cal(a,b,c,d,e,f);
-            alert('空压站节能空间' + (vals * 100).toFixed(2) + "%");
+            const air = document.querySelector('#air')
+            air.addEventListener("click", async () => {
+                var a = document.getElementById("type_a").value;
+                var b = document.getElementById("type_b").value;
+                var c = document.getElementById("type_c").value;
+                var d = document.getElementById("type_d").value;
+                var e = document.getElementById("type_e").value;
+                var f = document.getElementById("type_f").value;
+                if (!a) {
+                    alert('请输入工频空压机数量');
+                    return;
+                }
+                if (!b) {
+                    alert('请输入工频总功率');
+                    return;
+                }
+                if (!c) {
+                    alert('请输入工频平均加载率');
+                    return;
+                }
+                if (c < 1 || c > 100) {
+                    alert('工频平均加载率应大于等于1%且小于等于100%');
+                    return;
+                }
+                if (!d) {
+                    alert('请输入变频空压机数量');
+                    return;
+                }
+                if (!e) {
+                    alert('请输入变频总功率');
+                    return;
+                }
+                if (!f) {
+                    alert('请输入变频平均负载率');
+                    return;
+                }
+                if (f < 1 || f > 100) {
+                    alert('变频平均负载率应大于等于1%且小于等于100%');
+                    return;
+                }
+                var vals = cal(a, b, c, d, e, f);
+                alert('空压站节能空间' + (vals * 100).toFixed(2) + "%");
 
-        })
+            })
 
-    </script>
+        </script>
 </body>
 
 </html>
