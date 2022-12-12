@@ -7,7 +7,19 @@
     <script src="https://cdn.jsdelivr.net/npm/danfojs@1.1.2/lib/bundle.js"></script>
     <script src="https://cdn.bootcss.com/vConsole/3.2.0/vconsole.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/jschardet/3.0.0/jschardet.min.js"></script>
-
+    <style>
+        *{margin:0;padding:0;}
+		.box{
+		    width: 300px;
+		    height:10px;
+		    border:1px solid #9e9e9e;
+		}
+		.load{
+			 width:0px;
+			 height:10px;
+			 background:#325976;
+		}
+        </style>
     <title>Document</title>
 </head>
 
@@ -22,6 +34,10 @@
     <div><a>储能站售价</a><input type="text" id="packPrice" value="400000">
         <input type="file" id="file" name="file">
         <button id="simulate">计算</button>
+        <div>
+            <div class="box" id="div_box"><div class="load" id="load"></div></div>
+            <span id='result'></span>
+        </div>
         <div id="div1"></div><button id="download1">下载</button>
         <div id="div2"></div><button id="download2">下载</button>
         <div id="div3"></div><button id="download3">下载</button>
@@ -75,6 +91,17 @@
             window.addEventListener('load', function () {
                 alert("程序加载完成")
             })
+
+            function setBar(n) {
+                var result = document.getElementById('result');
+                var load = document.getElementById('load');
+                if(n<=100){
+                    if(n>100)n=100;
+                    result.innerText=n+"%"; 
+                    load.style.width=n*3+'px';
+                }
+            }
+            setBar(0) 
 
             const inputFile = document.querySelector('#file')
             const simulation = document.querySelector('#simulate')
@@ -226,6 +253,7 @@
                     //console.log(powerdata)
 
                     for (var pack_number = pack_numberL; pack_number <= pack_numberH; pack_number++) {
+                        setBar((pack_number- pack_numberL)/(pack_numberH - pack_numberL) * 100) 
                         const max_year = 10;
                         let fix_return_year = max_year;
                         let unfix_return_year = max_year;
