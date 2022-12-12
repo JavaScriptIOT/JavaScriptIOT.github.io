@@ -92,14 +92,16 @@
                 alert("程序加载完成")
             })
 
-            function setBar(n) {
-                var result = document.getElementById('result');
-                var load = document.getElementById('load');
-                if(n<=100){
-                    if(n>100)n=100;
-                    result.innerText=n+"%"; 
-                    load.style.width=n*3+'px';
-                }
+            async function setBar(n) {
+                await new Promise(() => setTimeout( () => {
+                    var result = document.getElementById('result');
+                    var load = document.getElementById('load');              
+                    if(n<=100){
+                        if(n>100)n=100;
+                        result.innerText=n+"%"; 
+                        load.style.width=n*3+'px';
+                    }
+                }, 100));
             }
             setBar(0) 
 
@@ -347,6 +349,7 @@
                     div4.plot("div4").table()
                 }
                 if (extension == "xls") {
+                    setBar(20) 
                     dfd.readExcel(file).then((df) => {
                         work(df)
                     }).catch(err => {
@@ -354,6 +357,7 @@
                     })
                 }
                 else if (extension == "csv") {
+                    setBar(20) 
                     const reader = new FileReader();
                     reader.readAsDataURL(file)  // 获取txt文件的base64码
                     reader.onload = function (evt) {
