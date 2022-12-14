@@ -306,14 +306,14 @@
                         total_money_gain = new_df_2["收入_max"].max()
                         transform_capacity_momey = transform_capacity * 30 * new_df_2.index.length
                         total_cost = pack_number * pack_price
-                        console.log("设备数" + pack_number)
-                        console.log("储能总利润" + total_money_gain)
-                        console.log("储能容量费用" + max_power_all_momey)
-                        console.log("原始容量费用" + max_power_current_momey)
-                        console.log("固定容量费用" + transform_capacity_momey)
+                        // console.log("设备数" + pack_number)
+                        // console.log("储能总利润" + total_money_gain)
+                        // console.log("储能容量费用" + max_power_all_momey)
+                        // console.log("原始容量费用" + max_power_current_momey)
+                        // console.log("固定容量费用" + transform_capacity_momey)
 
-                        console.log("设备成本" + total_cost)
-                        console.log("年数" + year)
+                        // console.log("设备成本" + total_cost)
+                        // console.log("年数" + year)
                         var fix_year_earning = (total_money_gain + max_power_current_momey - transform_capacity_momey) /new_df_2.index.length * 12
                         if (fix_all_gain_money >= 0)
                         if (fix_all_gain_money + fix_year_earning > total_cost) {
