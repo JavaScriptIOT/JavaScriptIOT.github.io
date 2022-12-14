@@ -223,16 +223,16 @@
                     //                df = df.tail(3000)
 
                     df.sortValues("日期", { ascending: true, inplace: true })
-
                     var powerdata = df.loc({ columns: ['日期', '瞬时有功'] })
                     powerdata = powerdata.dropNa({ axis: 1 })
+                    powerdata['日期'] = powerdata['日期'].apply( (x) => x.replace('\t', ''))
                     var d = new Array(powerdata.index.length).fill(0.1)
                     powerdata.addColumn('储能', d, { inplace: true })
                     powerdata.addColumn('收入', d, { inplace: true })
                     powerdata.addColumn('总功率', d, { inplace: true })
 
                     function work(col) {
-                        const date = new Date(col[0].replace('\t', ''))
+                        const date = new Date(col[0])
                         const hour = date.getHours();
                         const power = col[1];
                         if (hour >= powerprice.valley_time.time[0].start_hour && hour < powerprice.valley_time.time[0].end_hour)
@@ -276,17 +276,17 @@
 
                         temp_powerdata = powerdata.apply(work, { axis: 1 })
                         temp_powerdata = temp_powerdata.addColumn('月', temp_powerdata['日期'].apply((x) => {
-                            const date = new Date(x.replace('\t', ''))
+                            const date = new Date(x)
                             const month = date.getMonth() + 1;
                             return month
                         }));
                         temp_powerdata = temp_powerdata.addColumn('日', temp_powerdata['日期'].apply((x) => {
-                            const date = new Date(x.replace('\t', ''))
+                            const date = new Date(x)
                             const day = date.getDate();
                             return day
                         }));
                         temp_powerdata = temp_powerdata.addColumn('星期', temp_powerdata['日期'].apply((x) => {
-                            const date = new Date(x.replace('\t', ''))
+                            const date = new Date(x)
                             const day = date.getDay();
                             return day
                         }));
