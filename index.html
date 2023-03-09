@@ -25,10 +25,16 @@
 
 <body>
     <h2>储能站投资回报计算</h2>
-    <div><a>变压器容量功率:</a><input type="text" id="transformCapacity" value="4450"><a>KW</a><a>用户当前容量费用：</a><select id="fixUnfix">
+    <div><a>变压器容量功率:</a><input type="text" id="transformCapacity" value="4450"><a>KW</a>
+        <a>用户当前容量费用：</a><select id="fixUnfix">
             <option value="fix">固定容量费用</option>
             <option value="unfix">可变容量费用</option>
         </select></div>
+        <a>用户当前倍率：</a><select id="power_time">
+            <option value="1">1</option>
+            <option value="3000">3000</option>
+        </select></div>
+
     <div><a>储能站个数区间:</a><input type="text" id="packNumberL" value="10">---<input type="text" id="packNumberH"
             value="15"></div>
     <div><a>储能站售价</a><input type="text" id="packPrice" value="400000">
@@ -140,6 +146,8 @@
                 const pack_numberL = parseInt(document.getElementById("packNumberL").value)
                 const pack_price = parseInt(document.getElementById("packPrice").value)
                 var transform_capacity = parseInt(document.getElementById("transformCapacity").value)
+                var power_time = parseInt(document.getElementById("power_time").value)
+                console.log(power_time)
 
                 var powerpack_tamplate = {
                     pack_max_capacity: 215,
@@ -234,7 +242,7 @@
                     function work(col) {
                         const date = new Date(col[0])
                         const hour = date.getHours();
-                        const power = col[1];
+                        const power = col[1] * power_time;
                         if (hour >= powerprice.valley_time.time[0].start_hour && hour < powerprice.valley_time.time[0].end_hour)
                             charge(power, pack_charge_rate_night)
                         else if (hour >= powerprice.valley_time.time[1].start_hour && hour < powerprice.valley_time.time[1].end_hour)
