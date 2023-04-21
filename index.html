@@ -89,7 +89,7 @@
         </div>
 
         <script>
-            var vConsole = new VConsole();
+            //var vConsole = new VConsole();
 
             window.addEventListener('load', function () {
                 alert("程序加载完成")
@@ -235,7 +235,9 @@
                     powerdata.addColumn('储能', d, { inplace: true })
                     powerdata.addColumn('收入', d, { inplace: true })
                     powerdata.addColumn('总功率', d, { inplace: true })
+                    powerdata.addColumn('最大需量', d, { inplace: true })
 
+                    powerpack_tamplate.transform_capacity = 0
                     function work(col) {
                         const date = new Date(col[0])
                         const hour = date.getHours();
@@ -255,7 +257,11 @@
                         // console.log(powerpack_state.pack_current_power)
                         // console.log(powerpack_state.pack_momey_gain)
                         // console.log(powerpack_state.total_power)
-                        return [col[0], col[1], powerpack_state.pack_current_power, powerpack_state.pack_momey_gain, powerpack_state.total_power]
+                        // console.log(powerpack.transform_capacity)
+                         
+                        if(date.getDate() == 1 && hour == 0) powerpack.transform_capacity = 0
+                        powerpack.transform_capacity = Math.max(powerpack.transform_capacity, col[1])
+                        return [col[0], col[1], powerpack_state.pack_current_power, powerpack_state.pack_momey_gain, powerpack_state.total_power, powerpack.transform_capacity]
                     }
                     //console.log(powerdata)
 
@@ -270,6 +276,7 @@
                         for (var year = 0; year <= max_year ; year = year+1) {
 
                         powerpack_state = {
+                            maxpower:0,
                             pack_current_power: 0,
                             pack_momey_gain: 0,
                             total_power: 0,
@@ -347,7 +354,7 @@
                     div1.plot("div1").table() //display csv as table
                     div2.plot("div2").line({
                         config: {
-                            columns: ["瞬时有功", "储能", "收入", "总功率"]
+                            columns: ["瞬时有功", "储能", "收入", "总功率", "最大需量"]
                         }
                     })  //makes a timeseries plot
                     div3.plot("div3").table()
