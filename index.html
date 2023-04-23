@@ -237,7 +237,7 @@
                     powerdata.addColumn('总功率', d, { inplace: true })
                     powerdata.addColumn('最大需量', d, { inplace: true })
 
-                    powerpack_tamplate.transform_capacity = 0
+                    // powerpack_tamplate.transform_capacity = 0
                     function work(col) {
                         const date = new Date(col[0])
                         const hour = date.getHours();
@@ -259,7 +259,7 @@
                         // console.log(powerpack_state.total_power)
                         // console.log(powerpack.transform_capacity)
                          
-                        if(date.getDate() == 1 && hour == 0) powerpack.transform_capacity = 0
+                        // if(date.getDate() == 1 && hour == 0) powerpack.transform_capacity = 0
                         powerpack.transform_capacity = Math.max(powerpack.transform_capacity, col[1])
                         return [col[0], col[1], powerpack_state.pack_current_power, powerpack_state.pack_momey_gain, powerpack_state.total_power, powerpack.transform_capacity]
                     }
